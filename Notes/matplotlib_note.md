@@ -32,7 +32,7 @@ y_points = np.array([1, 10, 5, 8])
 plt.plot(x_points, y_points)
 plt.show()
 ```
-![pyplot image](..\Codes\matplotlib_learnings\images\pyplot_1.png)
+![pyplot image](/Codes/matplotlib_learnings/images/pyplot_1.png)
 
 ***
 
@@ -228,7 +228,7 @@ plt.scatter(x, y, c=colors, cmap='viridis')
 plt.colorbar()  # (OPTIONAL) includes color bar also in figure
 ```
 
-![Scatter plot](..\Codes\matplotlib_learnings\images\scatter_plot_1.png)
+![Scatter plot](/Codes/matplotlib_learnings/images/scatter_plot_1.png)
 
 ***
 
@@ -259,7 +259,7 @@ x = np.random.normal(100, 10, 50)
 plt.hist(x)
 ```
 
-![histogram](..\Codes\matplotlib_learnings\images\histogram_plot_1.png)
+![histogram](/Codes/matplotlib_learnings/images/histogram_plot_1.png)
 
 ***
 
@@ -275,7 +275,7 @@ plt.pie(y, labels=my_labels, startangle=90)  # default angle is 0
 plt.title("My work experience")
 ```
 
-![pie chart](..\Codes\matplotlib_learnings\images\piechart_1.png)
+![pie chart](/Codes/matplotlib_learnings/images/piechart_1.png)
 
 ***
 
