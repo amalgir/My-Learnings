@@ -19,14 +19,18 @@
 * NOT case-sensitive
 * ends with ;
 * Comments in SQL ```--comment``` or ```/* comment */```
->Ex: SELECT name, date, salary FROM employees WHERE salary > 25000;
+```sql
+SELECT name, date_of_join, salary FROM employees WHERE salary > 25000;
+```
 
 ***
 
 <div id="id-2"></div>
 
 ### 2) Create database
-> CREATE DATABASE database_name;
+```sql
+CREATE DATABASE database_name;
+```
 
 ***
 
@@ -34,7 +38,7 @@
 
 ### 3) Create Table
 
-```
+```sql
 CREATE TABLE table_name (
     column1_name data_type constraints,
     column2_name data_type constraints,
@@ -42,9 +46,7 @@ CREATE TABLE table_name (
 );
 ```
 
-```
-Example:
-
+```sql
 CREATE TABLE persons (
     id INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(50) NOT NULL,
@@ -71,7 +73,7 @@ INT, DECIMAL, CHAR, VARCHAR, TEXT, DATE, DATETIME, TIMESTAMP
 | CHECK       | ```salary INT NOT NULL CHECK (salary >= 3000 AND salary <= 10000),```                              |
 | FOREIGN KEY | connects primary key column of one table to the foreign key of another table ( same column values) |
 
-```
+```sql
 CREATE TABLE employees (
     emp_id INT NOT NULL PRIMARY KEY,
     emp_name VARCHAR(55) NOT NULL,
@@ -89,7 +91,10 @@ Here departments is another table with dept_id same as emp_id in employees table
 
 ### 5) INSERT
 
->INSERT INTO table_name (column1,column2,...) VALUES (value1,value2,...);
+```sql
+INSERT INTO table_name (column1,column2,...) VALUES (value1,value2,...);
+```
+
 * Non-numeric values (strings, dates) must be surrounded by quotes
 
 ***
@@ -105,7 +110,7 @@ Here departments is another table with dept_id same as emp_id in employees table
 <div id="id-7"></div>
 
 ### 7) WHERE
-```
+```sql
 SELECT * FROM employees
 WHERE emp_id = 25;
 ```
@@ -122,7 +127,7 @@ WHERE Operators
 
 ### 8) AND , OR
 
-```
+```sql
 SELECT * FROM employees
 WHERE salary > 1000 AND (dept_id = 2 OR dept_id = 4);
 ```
@@ -133,24 +138,24 @@ WHERE salary > 1000 AND (dept_id = 2 OR dept_id = 4);
 
 ### 9) IN, BETWEEN
 
-```
+```sql
 SELECT * FROM table_name
 WHERE column_name IN (value1, value1,...);
 ```
 
-```
+```sql
 SELECT column1_name, column2_name, columnN_name
 FROM table_name
 WHERE column_name BETWEEN min_value AND max_value;
 ```
 
 * Date Range
-```
+```sql
 SELECT * FROM employees WHERE hire_date
 BETWEEN CAST('2006-01-01' AS DATE) AND CAST('2016-12-31' AS DATE);
 ```
 * All names beginning with letter string range
-```
+```sql
 SELECT * FROM employees
 WHERE emp_name BETWEEN 'O' AND 'Z';
 ```
