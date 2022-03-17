@@ -2,22 +2,22 @@
 
 ## Contents
 
-* [1) Basics](#id-1)
-* [2) Create database](#id-2)
-* [3) Create Table](#id-3)
-* [4) SQL Constraints](#id-4)
-* [5) INSERT](#id-5)
-* [6) SELECT](#id-6)
-* [7) WHERE](#id-7)
-* [8) AND , OR](#id-8)
-* [9) IN, BETWEEN](#id-9)
-* [10) ORDERING](#id-10)
-* [11) TOP / LIMIT](#id-11)
-* [12) DISTINCT](#id-12)
-* [13) UPDATE](#id-13)
-* [14) DELETE](#id-14)
-* [15) TRUNCATE TABLE](#id-15)
-* [16) DROP TABLE](#id-16)
+1) [Basics](#id-1)
+2) [Create database](#id-2)
+3) [Create Table](#id-3)
+4) [SQL Constraints](#id-4)
+5) [INSERT](#id-5)
+6) [SELECT](#id-6)
+7) [WHERE](#id-7)
+8) [AND , OR](#id-8)
+9) [IN, BETWEEN](#id-9)
+10) [ORDERING](#id-10)
+11) [TOP / LIMIT](#id-11)
+12) [DISTINCT](#id-12)
+13) [UPDATE](#id-13)
+14) [DELETE](#id-14)
+15) [TRUNCATE TABLE](#id-15)
+16) [DROP TABLE](#id-16)
 
 <div id="id-1"></div>
 
