@@ -1,11 +1,21 @@
 # Django
 
+## Table of Contents
+1) [Start Project](#id1)
+2) [Runs Server](#id2)
+3) [Sync settings with django project](#id3)
+4) [Admin login](#id4)
+5) [Start apps](#id5)
+6) [Adding models](#id6)
+
 ### Install django
 ```pip install django```
 
 ***
 
-### Start Project
+<div id="id1"></div>
+
+### 1) Start Project
 ```commandline
 django-admin startproject projectname
 ```
@@ -24,14 +34,18 @@ RESULTANT FOLDER STRUCTURE
 
 ***
 
-### Runs Server
+<div id="id2"></div>
+
+### 2) Runs Server
 ``` 
 python manage.py runserver
 ```
 
 ***
 
-### Sync settings with django project
+<div id="id3"></div>
+
+### 3) Sync settings with django project
 
 ```commandline
 python .\manage.py migrate
@@ -39,7 +53,9 @@ python .\manage.py migrate
 
 ***
 
-### Admin login
+<div id="id4"></div>
+
+### 4) Admin login
 
 In settings, we have installed apps
 > INSTALLED_APPS = [
@@ -68,7 +84,9 @@ Now admin can add users with name and email and do other stuffs in the website i
 
 ***
 
-### Start apps
+<div id="id5"></div>
+
+### 5) Start apps
 
 ```commandline
  python manage.py startapp appname 
@@ -89,7 +107,9 @@ Used to create different apps as required.
 
 ***
 
-### Adding models
+<div id="id6"></div>
+
+### 6) Adding models
 
 * Write a new model/class in model.py file, in appname
     ```python
@@ -134,4 +154,30 @@ Used to create different apps as required.
 
 * Now visit url for testing these `http://127.0.0.1:8000/admin/`
 
+
+![product object added image](../Codes/django_learnings/images/django_products_1.png)
+
+#### Creating product objects using shell
+
+* Start shell in command line
+`python manage.py shell`
+
+* Import the `Product` class we created 
+```python
+from products.models import Product
+```
+
+* To see all objects of the class created till now
+`Product.objects.all()`
+
+* To create a new object for 'Product' class
+```python
+Product.objects.create(name='productName',description='some Description',summary='Some Summary')
+```
+* Product object gets updated in site
+
+![model object added](../Codes/django_learnings/images/django_products_2.png)
+
 ***
+
+###
