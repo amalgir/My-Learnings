@@ -160,7 +160,7 @@ Used to create different apps as required.
 * Now visit url for testing these `http://127.0.0.1:8000/admin/`
 
 
-![product object added image](../Codes/django_learnings/images/django_products_1.png)
+![product object added image](/Codes/django_learnings/images/django_products_1.png)
 
 #### Creating product objects using shell
 
@@ -181,7 +181,7 @@ Product.objects.create(name='productName',description='some Description',summary
 ```
 * Product object gets updated in site
 
-![model object added](../Codes/django_learnings/images/django_products_2.png)
+![model object added](/Codes/django_learnings/images/django_products_2.png)
 
 #### Other model fields
 
@@ -322,7 +322,7 @@ Ex: To add a navigation menu to all pages, include `navigation.html` in `base.ht
 {% include "navigation.html" %}
 ```
 
-![include tag](../Codes/django_learnings/images/django_about_1.png)
+![include tag](/Codes/django_learnings/images/django_about_1.png)
 
 ***
 
