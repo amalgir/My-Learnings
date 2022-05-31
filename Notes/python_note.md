@@ -831,6 +831,9 @@ print(x)  # ['d', 'e', 'h', 'g', 'b', 'f', 'c', 'a']
 * #### Mixed datatype `x = [10, "Hi", True]`
 * #### Nested List  `x = ["hi", [10, 20, 30], ["How", "are", "you"]]`
 * #### List index  `x[0] --> first item` `x[-1] --> last item` `x[-2] --> second last item`
+
+***
+
 * #### List slicing 
   ```python
   x = [0, 1, 2, 3, 4, 5, 6]
@@ -840,3 +843,337 @@ print(x)  # ['d', 'e', 'h', 'g', 'b', 'f', 'c', 'a']
   print(x[:4])    # [0, 1, 2, 3]
   print(x[:])     # [0, 1, 2, 3, 4, 5, 6]
   ```
+
+***
+
+* #### Change / Edit List Elements
+
+  `x[0] = 10`  Changing first element
+  
+  `x[2:5] = [9, 8, 5]`  Changing elements at index 2,3,4
+  
+  `x.append(7)` Appends 7 to last
+
+  `x.extend([5, 4, 3])` OR `x = x + [5, 4, 3]`  Add these elements to the last
+
+  ```python
+  print(["hi"]*3)         # ['hi', 'hi', 'hi']
+  print([9] * 3)          # [9, 9, 9]
+  print([9] + [9] + [9])  # [9, 9, 9]
+  ```
+
+  `x.insert(1,25)` Inserts value 25 at index position 1 without editing other values
+  
+  `x[2:2] = [5, 7]` Inserts these two values from index 2 to 2 ie at index 2, 3 respectively
+
+***
+
+* #### Delete
+
+  `del x[2]` Deletes value at index 2
+  
+  `del x[1:3]` Deletes value at index 1,2
+  
+  `del x` Deletes entire list, thereafter we cant even call the list name
+
+  ```python
+  x = ["a", "b", "c", "d", "e", "f", "g"]
+  
+  x[5:] = []  # Deletes "f" "g"
+  print(x)  # ['a', 'b', 'c', 'd', 'e'] 
+  
+  x.remove("a")
+  print(x)  # ['b', 'c', 'd', 'e']
+  
+  print(x.pop())  # e
+  print(x)  # ['b', 'c', 'd']
+  
+  print(x.pop(1))  # c
+  print(x)  # ['b', 'd']
+  
+  x.clear()
+  print(x)  # []
+  ```
+  
+  ```python
+  x = ["a", "b", "e", "c", "d", "e", "f", "g", "f"]
+  
+  print(x.index("b"))  # 1
+  
+  print(x.count("f"))  # 2
+  
+  x.sort()  # Sorts alphabetically
+  print(x)
+  
+  x.reverse()  # reverse list ['g', 'f', 'f', 'e', 'e', 'd', 'c', 'b', 'a']
+  print(x)
+  ```
+  
+***
+
+* #### List Comprehension
+
+```python
+even = [x for x in range(10) if x % 2 == 0]
+print(even)  # [0, 2, 4, 6, 8]
+```
+
+```python
+result = [x+y for x in ["Good ", "Nice "] for y in ["Morning", "Evening"]]
+print(result)  # ['Good Morning', 'Good Evening', 'Nice Morning', 'Nice Evening']
+```
+
+***
+***
+
+### Tuple
+
+* `tuple_1 = (10, [1, 2, 3], "Hi", True)`
+
+* #### Tuple Packing
+  Creating tuple without using parentheses --> `tuple_1 = 3, [1, 2, 3], 4` 
+  
+  Tuple unpacking --> `x, y, z = tuple_1`
+
+***
+
+* #### Tuple with one element
+
+  `tuple_1 = ("Hi)`  --> Not tuple but string (<class 'str'>)
+
+  `tuple_1 = ("Hi,)` `tuple_1 = "Hi,`  --> tuple (<class 'tuple'>)
+
+**Note** Indexing and slicing are similar to list
+
+***
+
+* #### Changing tuple
+
+  Tuple is immutable. But if one of the element is list, we can change that list
+
+  ```python
+  x = (2, [1, 2])
+  
+  x[1].append(55)
+  print(x)  # (2, [1, 2, 55])
+  ```
+
+**Concatenation**  `print((1, 2, 3) + (4, 5, 6))` --> (1,2,3,4,5,6)
+
+**Repeat**  `print((9,) * 3)` --> (9, 9, 9)
+
+**Delete** `del tuple_1` --> deletes entire tuple
+
+**Tuple Methods**  `tuple_1.count("a")`  `tuple_1.index("a")` 
+
+** Membership and Iteration**  same as list  `in` `not in` works
+
+***
+***
+
+### String
+
+* Indexing and slicing are similar to list
+
+* String is immutable just like tuple
+
+* `del str_var` deletes entire string like tuple
+
+* concatenation +  , repeat * are similar to tuple
+
+* #### Combining strings
+
+  ```python
+  x = 'ele' 'phant'
+  print(x)  # elephant
+  ```
+  
+  Use parentheses for coding strings in multi line
+  ```python
+  x = ("ele" 
+       "phant")
+  print(x)  # elephant
+  ```
+
+***
+
+* Membership `in` `not in` and Iterating using loop possible
+
+* #### Builtin Functions
+
+  `len("python")`  --> 6
+  
+  `enumerate("python")`  --> returns enumerate object  `<enumerate object at 0x000002406FCE32C0>`
+  
+  `list(enumerate("abc"))`  --> `[(0, 'a'), (1, 'b'), (2, 'c')]`
+
+***
+
+* #### Escape Sequence
+
+` \ `  --> newline ignored
+
+`\\`  --> backslash
+
+`\n`-->newline ,  `\t`-->tab  , `\ooo`-->octal , `\xHH`-->hex
+
+Hex escape sequence
+```python
+x = "It is \x37\x70\x24 .  Good"
+print(x)  # It is 7p$ .  Good
+```
+
+Raw string  `r` or `R`
+```python
+x = r"It is \x37\x70\x24 .  Good"
+print(x)  # It is \x37\x70\x24 .  Good
+```
+
+***
+
+* #### Format
+
+```python
+print("{0} --> {0:b}".format(10))  # 10 --> 1010 (binary)
+print("{0} --> {0:e}".format(1546.2548))  # 1546.2548 --> 1.546255e+03 (float)
+print("{0} --> {0:.3f}".format(1/3))  # 0.3333333333333333 --> 0.333  (round)
+
+# Alignment
+print("|{:<5}|".format("Hi"))  # |Hi   |
+print("|{:^5}|".format("Hi"))  # | Hi  |
+print("|{:>5}|".format("Hi"))  # |   Hi|
+```
+
+***
+
+* #### String methods
+
+`"lower".upper()`  --> to upper case    `"UPPER".lower()`  --> to lower case
+
+```python
+x_list = "Python is good".split()
+print(x_list)  # ['Python', 'is', 'good']
+
+x_str = ''.join(x_list)
+print(x_str)  # Pythonisgood
+
+index = x_str.find("thon")
+print(index)  # 2
+
+x_str_2 = x_str.replace("Python", "Java")
+print(x_str_2)  # Javaisgood
+```
+
+***
+***
+
+### Sets
+
+`{52.0, "Hi", (1, 2, 3)}`   or `set([1, 2, 3, 2])`
+
+not ordered, unique, NO indexing
+
+`x={}` --> dictionary   `x = set()`--> set
+
+set can have tuple, but NOT list
+
+***
+
+* #### Changing / Updating
+
+```python
+x = {52.0, "Hi", (1, 2, 3)}
+print(x)  # {(1, 2, 3), 52.0, 'Hi'}
+
+x.add(22)
+print(x)  # {(1, 2, 3), 52.0, 22, 'Hi'}
+
+x.update([1, 2, 3])
+print(x)  # {1, 2, 3, (1, 2, 3), 'Hi', 52.0, 22}
+
+x.update((1, 2, 3, 4))
+print(x)  # {1, 2, 3, 4, (1, 2, 3), 'Hi', 52.0, 22}
+
+x.update([7, 8], {99, 100})
+print(x)  # {1, 2, 3, 4, 99, 100, 7, 8, (1, 2, 3), 'Hi', 52.0, 22}
+```
+
+***
+
+* #### Removing
+
+`set_1.discard(2)`  or `set_1.remove(2)` both will remove that value
+if the value is not present, remove gives error, discard wont
+
+`set_1.pop()` pops some arbitrary value
+
+`set_1.clear()` --> clears all
+
+***
+
+* #### Set Operations
+
+**Set Union**  `|`
+```python
+A = {1, 2, 3}
+B = {3, 4}
+
+print(A | B)  # {1, 2, 3, 4}
+```
+  
+**Set Intersection**  `&`
+
+```python
+A = {1, 2, 3}
+B = {3, 4}
+
+print(A & B)  # {3}
+# OR
+print(A.intersection(B))  # {3}
+# OR
+print(B.intersection(A))  # {3}
+```
+
+** Difference**
+`A - B` or `A.difference(B)`
+`B - A` or `B.difference(A)`
+
+**Symmetric Difference**
+
+`A ^ B` or `A.symmetric_difference(B)` or `B.symmetric_difference(A)`
+
+elements in A and B but not in both
+
+Many methods and buildin functions are there for set. 
+**Note** For reference check `www.programiz.com/python-programming/set`
+
+**Frozen Set**
+Immutable sets `A = frozenset([1, 2, 3])`
+
+***
+***
+
+### Dictionary
+
+`dict_1 = { "key1": "value1", "key2": "value2" }`
+
+key must be immutable - string, number, tuple
+
+`dict_1["key1]` --> gives `"value1"`, If key is invalid then error
+
+To avoid error, `dict_1.get("key1)`
+
+`dict_1["key3"] = "value3"`  --> to add new key-value or update
+
+`dict_1.pop("key1")` --> removes that key and value
+
+`dict_1.popitem()` --> remove an arbitrary item
+
+`dict_1.clear()` --> clears all
+
+`del dict_1` --> deletes dict itself
+
+***
+***
+***
+***
