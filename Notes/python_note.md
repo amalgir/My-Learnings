@@ -1,4 +1,4 @@
-# Python
+# Python Part 1
 
 
 ## Contents
@@ -1177,3 +1177,5 @@ To avoid error, `dict_1.get("key1)`
 ***
 ***
 ***
+
+♦ [Python Part 2](python_note_part_2.md)
