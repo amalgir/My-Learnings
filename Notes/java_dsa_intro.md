@@ -1,4 +1,7 @@
 # Java DSA
+
+These are notes made for revision, after watching the Java DSA playlist of Kunal Kushwaha on youtube.
+
 ***
 
 
@@ -12,6 +15,7 @@
 ## Contents
 
 1) Basics
+2) FlowChart
 
 
 ***
@@ -63,4 +67,31 @@ public class Example{
 When java does garbage collection automatically, it removes all those objects with no reference variables pointing to it
 
 ***
+***
+
+### 2) Flow Chart & PseudoCodes
+
+#### Flowchart
+* start/stop --> oval
+* input/output --> parallelogram  (enter two numbers)
+* processing --> rectangle (add to numbers)
+* condition --> diamond symbol (if salary greater than 10k )
+
+![Salary Problem FlowChart](/Images/JavaDSA/salary_flowchart.jpg)
+
+![Prime Number Problem Flowchart](/Images/JavaDSA/prime_flowchart.jpg)
+
+***
+
+#### PseudoCodes
+
+![Prime Number Problem pseudocode](/Images/JavaDSA/prime_pseudocode.jpg)
+
+![Optimized Prime Number Problem pseudocode](/Images/JavaDSA/optimizes_prime_pseudocode.jpg)
+
+***
+***
+
+#### 3)  Java Architecture
+
 
