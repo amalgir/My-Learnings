@@ -77,7 +77,11 @@ When java does garbage collection automatically, it removes all those objects wi
 * processing --> rectangle (add to numbers)
 * condition --> diamond symbol (if salary greater than 10k )
 
+**Salary Problem Flowchart**
+
 ![Salary Problem FlowChart](/Images/JavaDSA/salary_flowchart.jpg)
+
+**Prime Number Problem Flowchart**
 
 ![Prime Number Problem Flowchart](/Images/JavaDSA/prime_flowchart.jpg)
 
@@ -85,13 +89,72 @@ When java does garbage collection automatically, it removes all those objects wi
 
 #### PseudoCodes
 
+**Prime Number Problem Pseudocode**
+
 ![Prime Number Problem pseudocode](/Images/JavaDSA/prime_pseudocode.jpg)
+
+**Optimized Prime Number Problem pseudocode**
 
 ![Optimized Prime Number Problem pseudocode](/Images/JavaDSA/optimizes_prime_pseudocode.jpg)
 
 ***
 ***
 
-#### 3)  Java Architecture
+### 3)  Java Architecture
 
+![Architecture 1](/Images/JavaDSA/java_architecture_1.jpg)
+
+#### Platform independent 
+![Architecture 2](/Images/JavaDSA/java_architecture_2.jpg)
+
+![Architecture 3](/Images/JavaDSA/java_architecture_3.jpg)
+
+![Architecture 4](/Images/JavaDSA/java_architecture_4.jpg)
+
+![Architecture 5](/Images/JavaDSA/java_architecture_5.jpg)
+
+![Architecture 6](/Images/JavaDSA/java_architecture_6.jpg)
+
+![Architecture 7](/Images/JavaDSA/java_architecture_7.png)
+
+
+***
+***
+
+### 4) Java Programming Basics
+
+* Every file with .java extension is a class and that class name is the file name
+* Class name starts with capital
+* `javac FileName.java` --> compiles and creates `FileName.class` file. `java FileName` runs it
+* main function is the entry point of a java code. no main function means code wont run
+    ```java
+    public class Example{
+        public static void main(String[] args) {
+            System.out.println("Hello");
+        }
+    }
+  ```
+
+* we use `static` for main function, because static function dont need its class' object to call it. If there is no static, then an object for `Example` class needs to be created first to call the function
+* For ex, if Human is a class, then world population is `static` as it is same for all human objects
+
+* To create class file in a particular place
+`javac -d . Example.java` --> creates at same directory,
+`javac -d .. Example.java` --> creates at one directory back of current one
+
+* If javac or java command not found, set it in environment variables by add it to path
+
+#### String[] args
+```java
+public class OtherRandom{
+  public static void main(String[] args) {
+    //If 'javac  OtherRandom.java'  and  'java OtherRandom "Hi" 100' in command line
+    System.out.println(args[0]); // Hi
+    System.out.println(args[1]); // 100
+    // If no arguments given --> Index out of bounds error
+  }
+}
+```
+
+***
 
