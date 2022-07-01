@@ -19,6 +19,8 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 3) [Java Architecture](#id3)
 4) [Java Programming Basics](#id4)
 5) [Conditionals & Loops in Java](#id5)
+6) [Switch & Nested case](#id6)
+7) [Functions / Methods ](#id7)
 
 
 ***
@@ -256,3 +258,208 @@ System.out.println(num); //65 --> ASCII value of 'A'
 <div id="id5"></div>
 
 ### 5) Conditionals & Loops in Java
+
+#### if else if
+
+```java
+if (num > 5){
+    num-=1;
+}
+else if (num<5){
+    num+=1;
+}
+else{
+    num = 0;
+}
+```
+
+***
+
+#### for loop
+
+```java
+for(int num=0; num<10; num++){
+    System.out.print(num + " ");  // 0 1 2 3 4 5 6 7 8 9 
+}
+```
+
+***
+
+#### while loop
+
+```java
+int num = 0;  // initialization
+while(num<10){  // condition
+    System.out.print(num + " ");  // 0 1 2 3 4 5 6 7 8 9 
+    num+=1; // update
+}
+```
+
+use for loop when total iteration count is known ,else use while loop
+
+***
+
+#### do while
+
+```java
+do{
+    System.out.println("Will run this body ATLEAST once");
+}
+while (num>3);
+```
+
+***
+
+#### Math.max
+
+```java
+// To find largest of 3 numbers
+int a=10, b=20, c=30;
+int max = Math.max(c, (Math.max(a,b)));
+```
+
+***
+
+#### To find the case of a character
+
+```java
+// To find case of a character
+Scanner input = new Scanner(System.in);
+char ch = input.next().trim().charAt(0);  // trim() removes all spaces from start and end in the string
+if( ch>='A' && ch<='Z'){
+    System.out.println("UPPER CASE");
+}
+else{
+    System.out.println("LOWER CASE");
+}
+```
+
+* `trim` removes trailing spaces
+  ```java
+  String str = "   Hello Dear          ";
+  System.out.println(str.trim());  // "Hello Dear"
+  ```
+  
+* `charAt(index)`  gives character at that index of a string
+* `if( ch>='A' && ch<='Z')`  comparison of characters using ASCII
+
+***
+
+#### To count occurrence of a particular digit
+
+```java
+int n = 8575787;
+int ref_num = 7;
+int count = 0;
+
+while (n > 0){
+    int rem = n % 10;  // TO GET LAST DIGIT
+    if (rem == ref_num) {
+        count++;
+    }
+    n /= 10;  // TO REMOVE LAST DIGIT
+}
+System.out.println(count);
+```
+
+*** 
+
+#### To reverse a integer number
+LOGIC: To reverse 745 --> 547
+* ans = 5
+* ans = 5*10 + 4 = 54
+* ans = 54*10 + 7 = 547
+
+```java
+int n = 123456789;
+int ans =0;
+
+while (n > 0){
+    int rem = n % 10;  // TO GET LAST DIGIT
+    n /= 10;  // TO REMOVE LAST DIGIT
+    ans = ans *10 + rem;  // TO REVERSE THE GIVEN INTEGER
+}
+System.out.println(ans);  // 987654321
+```
+
+***
+
+<div id="id6"></div>
+
+### 6) Switch & Nested case
+
+* for String comparison use equals `animal.equals("tiger")` not `==` as `==` checks if both are same objects only. There is a possibility of having same string value in two different objects
+
+#### switch
+
+```java
+String state = "India";
+
+switch(state){
+    case "India":
+        System.out.println("New Delhi");
+        break;
+    case "UK":
+        System.out.println("London");
+        break;
+    default:
+        System.out.println("Invalid state");
+}
+```
+
+#### enhanced switch
+
+```java
+String state = "India";
+
+switch (state) {
+    case "India" -> System.out.println("New Delhi");
+    case "UK" -> System.out.println("London");
+    default -> System.out.println("Invalid state");
+}
+```
+
+#### same body for multiple cases
+
+```java
+int day = 5;
+
+switch (day) {
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+        System.out.println("Working Day");
+        break;
+    case 6:
+    case 7:
+        System.out.println("Holiday");
+        break;
+    default:
+        System.out.println("Invalid");
+}
+```
+
+OR
+
+```java
+int day = 7;
+
+switch (day) {
+    case 1, 2, 3, 4, 5 -> System.out.println("Working Day");
+    case 6, 7 -> System.out.println("Holiday");
+    default -> System.out.println("Invalid");
+}
+```
+
+* Try to use enhanced switch always
+* we can use a switch inside case of another switch --> Nested switch
+
+***
+***
+
+<div id="id7"></div>
+
+### 7) Functions / Methods 
+
