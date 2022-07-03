@@ -21,6 +21,7 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 5) [Conditionals & Loops in Java](#id5)
 6) [Switch & Nested case](#id6)
 7) [Functions / Methods ](#id7)
+8) [Arrays & ArrayList](#id8)
 
 
 ***
@@ -463,3 +464,382 @@ switch (day) {
 
 ### 7) Functions / Methods 
 
+* There is no pass by reference in java. - Only pass by value
+* pass by value --> when we pass a variable as argument in method, only a copy of its value is passed to that argument variable. So changing that variable wont change the value of the outside variable
+
+This creates a problem in swap method
+
+**pass by value for primitive data type argument**
+
+```java
+public class Example{
+    public static void main(String[] args) {
+        int a = 10;
+        int b = 20;
+        swap(a, b);
+        System.out.println("Outside swap Method:  a-->" + a + "  b-->" + b);  // 10 , 20  SWAP FAILED
+    }
+
+    private static void swap(int a, int b) {  // Only static method can be called inside a static method
+        int temp = a;
+        a = b;
+        b = temp;
+        System.out.println("Inside swap Method:  a-->" + a + "  b-->" + b);   // 20, 10  SWAP DONE
+    }
+}
+```
+
+***
+
+**For objects, complex datatypes --> pass by value of that reference variable, so original object changes**
+
+```java
+public class Example{
+    public static void main(String[] args) {
+        int[] array = {0, 1, 2, 3, 4, 5};
+        modifyArray(array);  // CHANGES ORIGINAL ARRAY VALUES
+        System.out.println(Arrays.toString(array));  // [9999, 1, 2, 3, 4, 5]
+    }
+
+    private static void modifyArray(int[] arr) {
+        arr[0] = 9999;
+        // arr = {1, 2, 3};   ERROR: Array initializer is not allowed here
+    }
+}
+```
+
+* Here object aka array value is modified only, not able to initialize
+* Not applicable to string as string is immutable, we cannot modify string
+
+***
+
+* Cannot initialize same variable multiple times in same scope
+* Values initialized in block remain in the block
+
+#### BLOCK SCOPE
+
+```java
+public static void main(String[] args) {
+   int a = 22;
+   
+   // BLOCK SCOPE
+    {
+    //  int a =77;  Already initialized outside the block in same method, So cannot initialize again
+        a = 77;  // But the original ref variable can be MODIFIED
+        int b = 33;  // this variable created here is accessible only inside this block
+    }
+
+    System.out.println(a);  // 77
+    // System.out.println(b);  // ERROR Cannot resolve symbol 'b'
+
+}
+```
+
+* Any variable outside scope (block or loop) but in same method which is already initialized are available inside block, cannot be initialized again
+* Any new variable initialized inside these scopes are not available outside the scope
+
+
+#### Shadowing
+
+Shadowing is the practice of using two variables with same name within scopes that overlaps
+
+
+```java
+public class Example{
+    static int a = 77;  // CLASS VARIABLE
+
+    public static void main(String[] args) {
+        System.out.println(a);  // 77
+        int a;  // CLASS VARIABLE is shadowed by this
+        //System.out.println(a);  // ERROR --> Variable 'a' might not have been initialized (scope will begin when value is initialized)
+        a = 88;
+        System.out.println(a);  // 88
+        display();  // 77
+    }
+
+    private static void display() {
+        System.out.println(a);
+    }
+}
+```
+
+***
+
+#### Variable length arguments (Varargs)
+
+```java
+public static void main(String[] args) {
+    display(11, "Hi", 4, 5, 6, 7, 8, 9, 0);
+
+}
+
+private static void display(int a, String b, int ...c) {
+    System.out.println(a);  // 11
+    System.out.println(b); // Hi
+    System.out.println(Arrays.toString(c));  // [4, 5, 6, 7, 8, 9, 0]
+
+}
+```
+
+* in arguments, varargs should be the last one
+* varargs is internally stored as an array
+* varargs can contain any number of arguments
+
+**Function overloading** 
+
+* Same name functions with different arguments
+* Happens at compile time
+* Either number of arguments or type of argument should be different
+* ambiguity error occurs when compiler cant decide which method is called. happens when we give no arguments and didnt created a method with empty arguments
+
+
+`static void display(int a)` `static void display(String a)` `static void display(int a, int b)`
+
+***
+
+#### PRIME Problem Using Method
+
+```java
+public class Example{
+    
+    public static void main(String[] args) {
+        int a = 17;
+        boolean ans = isPrime(a);
+        System.out.println(ans);
+    }
+
+    private static boolean isPrime(int num) {
+        if (num <=1){
+            return false;
+        }
+        int c = 2;
+        while (c * c <= num){
+            if (num % c == 0){
+                return false;
+            }
+            c++;
+        }
+        return c * c > num;
+    }
+}
+```
+
+***
+
+#### ARMSTRONG NUMBER
+
+153 is Armstrong number
+
+`153 = cube(1) + cube(5) + cube(3) = 1 + 125 + 27 = 153`
+
+**Problem to get all 3 digit armstrong numbers**
+
+```java
+public class Example{
+
+    public static void main(String[] args) {
+        for (int i=100; i<1000; i++){
+            if (isArmstrong(i)){
+                System.out.print(i + " ");  // 153 370 371 407 
+            }
+        }
+
+    }
+
+    private static boolean isArmstrong(int num) {
+        int original = num;
+        int sum = 0;
+        while(num>0){
+            int rem = num % 10;
+            sum += (rem*rem*rem);
+            num /= 10;
+        }
+        return sum == original;
+    }
+}
+```
+
+***
+***
+
+<div id="id8"></div>
+
+### 8) Arrays & ArrayList
+
+`int[] arr = new int[5];`  
+
+`int[] arr = {11, 22, 33, 44, 55};`
+
+```java
+int[] arr; // Declaration of array --> `arr` is getting defines in the `STACK`
+arr = new int[5];  // Initialization --> Object is actually created here in the memory (HEAP)
+```
+
+* In cpp,c  array memory allocation is continuous. (memory cells are together)
+* In Java, it is not continuous
+* In Java, array objects are in heap and heap objects are not continuous
+* So in Java, array may not be continuous internally - depends on jvm
+* `new` is used to create an object
+
+***
+
+#### null
+
+* null is like a special literal.
+* can assign it only to non primitive data type variable  `String str = null;`
+* default value for a String array is null, default of int array is 0
+* 
+```java
+String[] str = new String[2];
+
+System.out.println(str[0]); // null
+System.out.println(str[1]); // null
+System.out.println(str[2]);  // ERROR -> INDEX OUT OF BOND
+```
+
+***
+
+#### enhanced for loop
+
+SYNTAX: --> `for (datatype ref_variable: array)`
+
+```java
+int[] arr = {1, 2, 3, 4, 5};
+System.out.println(arr.length); // 5
+
+for (int i : arr){
+    System.out.print(i + " ");  // 1 2 3 4 5
+}
+```
+
+Converting arrays to string --> `System.out.println(Arrays.toString(arr));`
+
+***
+
+#### 2D Array
+
+row count is must, column count is optional
+
+```java
+/*
+1 2 3 4 5
+1 2
+1 2 3
+ */
+
+int[][] arr = {
+        {1, 2, 3, 4, 5},
+        {1, 2},
+        {1, 2, 3}
+};
+
+System.out.println(Arrays.toString(arr)); // [[I@4dd8dc3, [I@6d03e736, [I@568db2f2]
+System.out.println(Arrays.toString(arr[1]));  // [1, 2]
+```
+
+```java
+int[][] arr = new int[2][];
+arr = new int[][]{
+        {1, 2},
+        {3, 4, 5, 6}
+};
+```
+
+#### Display 2D Array
+
+```java
+static void display2DArray(int[][] arr){
+    for(int row=0; row < arr.length; row++){
+        for(int col=0; col < arr[row].length; col++){
+            System.out.print(arr[row][col] + " ");  // prints all elements in a row
+        }
+        System.out.println();  // new line after each row
+    }
+}
+```
+
+OR (using enhanced for)
+
+```java
+static void display2DArray(int[][] arr){
+    for( int[] row: arr){
+        for(int col: row){
+            System.out.print(col + " ");
+        }
+        System.out.println();
+    }
+}
+```
+
+***
+
+#### ArrayList
+
+`ArrayList<Integer> list = new ArrayList<Integer>(5);`  initial capacity number here is optional
+
+Wrapper class is used, primitive datatype cannot be used
+
+```java
+ArrayList<Integer> list = new ArrayList<Integer>(5);  // We can add more than 5; no problem 
+list.add(25);
+list.add(45);
+System.out.println(list); // [25, 45]
+```
+
+`boolean ans = list.contains(25);`
+
+**Update list**
+
+```java
+list.set(0, 100);
+System.out.println(list); // [100, 45]
+```
+
+**Get Item**
+
+if list is int ArrayList --> `int firstElement = list.get(0);`
+
+#### Internal working
+
+* Size is fixed internally
+* When array list is filled to some extent, it will create a new arraylist with say double the current size
+* Then the old list data is copied to the new list and then old list is deleted
+
+***
+
+#### 2D ArrayList
+```java
+public class Example{
+
+    public static void main(String[] args) {
+        Scanner input = new Scanner(System.in);
+        ArrayList<ArrayList<Integer>> list = new ArrayList<>();
+
+        // INITIALIZATION
+        for(int i=0;i<3;i++){
+            list.add(new ArrayList<>());
+        }
+
+        // ADDING ELEMENTS
+        for(int i=0; i<3; i++){
+            for(int j=0; j<3; j++){
+                list.get(i).add(input.nextInt());  // INPUT <-- 1 2 3 4 5 6 7 8 9
+            }
+        }
+
+        // DISPLAY
+        System.out.println(list); // [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+
+    }
+}
+```
+
+***
+
+* edge cases - like what if array/input is null or full...like that --> Handle it
+* swap method can be easily created using array --> like swapping index 1 and index3
+* finding largest number in an array --> assume first one as max, then compare with other elements. If other one is large put it in max
+* Reverse array --> if swap method is already written, then use swap to swap start and end elements, then start++, end-- in a while loop with condition start < end
+
+***
+***
