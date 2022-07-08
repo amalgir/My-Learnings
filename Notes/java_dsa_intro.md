@@ -1,4 +1,4 @@
-# Java DSA
+# Java DSA - Introduction
 
 These are notes made for revision, after watching the Java DSA playlist of Kunal Kushwaha on youtube.
 
@@ -8,7 +8,7 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 ## Main Topics
 
 1) [Introduction](java_dsa_intro.md)
-
+2) [OOP](java_dsa_oop.md)
 
 ***
 
