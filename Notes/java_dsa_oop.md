@@ -453,3 +453,203 @@ public class Example{
 
 ### 3) Principles - Inheritance, Polymorphism, Encapsulation, Abstraction
 
+#### Inheritance
+
+* Child Class inherits from Base Class
+* Child class has its parents properties + its own properties
+* `super()` --> calls parent/base class's constructor
+* `super(25, 5, 24)` --> calls respective parent constructor
+* `extends`  --> to inherit base class like `class BoxWeight extends Box{`
+* private variables from Base class are not accessible for child class. Then use methods from Base class or super() to call methods written in Base class
+* object of base class cannot access child class variables
+
+```java
+class Box{
+    int l, w, h;
+
+    // Default Constructor of Base class Box
+    Box(){
+        this.l = -1;
+        this.w = -1;
+        this.h = -1;
+    }
+
+    Box(int length, int width, int height){
+        this.l = length;
+        this.w = width;
+        this.h = height;
+    }
+}
+
+
+class BoxWeight extends Box{
+    int weight;
+
+    // Default constructor - to initialize all variables
+    BoxWeight(){
+        // super calls Parent/Base Class constructor
+        // call to super must be the first statement in constructor
+        super();  // Since no argument given calls default constructor Box()
+        weight = -1;
+    }
+
+    BoxWeight(int length, int width, int height, int weight){
+        super(length, width, height);
+        this.weight = weight;
+    }
+}
+
+
+public class Example{
+    public static void main(String[] args) {
+        BoxWeight box1 = new BoxWeight();
+        System.out.println(box1.l + " " + box1.w + " " + box1.h + " " + box1.weight); // -1 -1 -1 -1
+
+        BoxWeight box2 = new BoxWeight(25, 50, 75, 100);
+        System.out.println(box2.l + " " + box2.w + " " + box2.h + " " + box2.weight); // 25 50 75 100
+    }
+
+}
+```
+
+>Box reference variable in stack pointing to BoxWeight object in heap
+> cannot access BoxWeight properties
+> 
+>```java
+>Box box3 = new BoxWeight(11, 22, 33, 44);
+>// System.out.println(box3.weight);  // ERROR Cannot resolve symbol 'weight'
+>```
+
+Above case is done using this code
+
+>One of the constructor in Box
+>```java
+>Box(Box old){
+>    this.l = old.l;
+>    this.w = old.w;
+>    this.h = old.h;
+>}
+>```
+> 
+> One of the constructor in BoxWeight
+>```java
+>BoxWeight(BoxWeight other){
+>   super(other);
+>   this.weight = other.weight;
+>}
+>```
+>
+>This `super(other);` is same as `Box box3 = new BoxWeight();`
+
+* Vice versa is not possible
+* Child reference variable cannot point to parent object
+* `BoxWeight box4 = new Box(1,2,3);`  --> not possible as weight is accessible for box4 but not initialized by constructor(Box)
+
+
+#### super
+
+* super points to direct above (parent) class
+* `super in BoxWeight`  --> `Box`
+* `super in Box` --> `Object`   Here Object is a class
+* All classes we create are child of java's Object class
+* so we can use super() in a class we created without parent class
+* `this` is used to access object. `super` can be used to access parent class's object
+* Example if `Box` too has variable `weight`, How can we distinguish between `weight` in both Box and BoxWeight? 
+* `super.weight` is Box's weight.  `this.weight` is BoxWeight's weight (Assuming we are using both in BoxWeight class)
+* `BoxWeight box1 = new BoxWeight();`  --> Here Box constructor also gets called first when BoxWeight constructor is called, even if super() is not present in BoxWeight
+* That is, child constructor automatically by default calls parents default constructor if we didnt used super() in child constructor
+
+
+***
+
+#### Types of Inheritance
+
+* **Single Inheritance**
+
+    Base class --> Child class
+
+
+* **Multilevel inheritance**
+
+    * A class --> B class(child of A, Parent of C) --> C class (child of B)
+    * super() in C calls constructor in B & one in B calls constructor in A
+
+
+* **Multiple Inheritance**  (_NOT PRESENT IN JAVA_)
+
+    * One class extends more than one class
+    * class C inherits from both A and B
+    * So If A and B has say `n=5` and `n=10`, which n will class C gets?? --> So multiple inheritance not supported in java
+
+
+* **Hierarchial Inheritance**
+    * One class is inherited by many classes
+    * `A --> B `  `A --> C`  `A --> D`
+
+
+* **Hybrid Inheritance** (_NOT PRESENT IN JAVA_)
+    * Consists of simple and multiple inheritance --> So NOT IN JAVA
+
+  ![Hybrid Inheritance](/Images/JavaDSA/hybrid_inheritance.jpg)
+
+
+***
+
+#### Polymorphism
+
+`Poly --> many`    `Morphism --> many ways to represent`
+
+#### Types of polymorphism
+
+1) **Compile time / static polymorphism**
+
+    * Achieved by **method overloading** - same method names, but different arguments, return types..
+    * Example - different constructors
+
+***
+
+2) **Runtime / Dynamic Polymorphism**
+    * Achieved by **method overriding**
+   
+```java
+class Shapes{
+    void area(){
+        System.out.println("Shows are of shape");
+    }
+}
+
+class Circle extends Shapes{
+    // @Override Annotation gives error if this method is not present in its super/parent class (Shapes)
+    @Override
+    void area(){
+        System.out.println("Area of circle = pi*r*r");
+    }
+}
+
+public class Example{
+    public static void main(String[] args) {
+        Circle circle = new Circle();
+        circle.area();  // Area of circle = pi*r*r
+
+        // Works when type is parent and object is child
+        // Calls child method, but parent should also have that method and child should override it
+        Shapes shapeCircle = new Circle();
+        shapeCircle.area();  // Area of circle = pi*r*r
+        /*
+        Gives error if 'area()' method is absent in Shapes class --> Cannot resolve method 'area' in 'Shapes'
+         */
+
+    }
+}
+```
+> **How Overriding works?**
+> 
+> `Parent obj = new Child();`
+> 
+> Here which method is called depends on Child().
+> 
+> This is known as Upcasting
+> 
+> (Parent) reference type determines what all are accessible , which we already discussed
+
+***
