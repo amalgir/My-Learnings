@@ -18,7 +18,8 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 1) [OOP - Introduction & Concepts](#id1)
 2) [OOP - Packages,Static,Singleton Class,In-built methods](#id2)
 3) [OOP - Principles: Inheritance, Polymorphism, Encapsulation, Abstraction](#id3)
-
+4) [OOP - Access Control, In-built Packages, Object Class](#id4)
+5) [OOP - Abstract Classes, Interfaces, Annotations](#id5)
 
 ***
 
@@ -652,4 +653,257 @@ public class Example{
 > 
 > (Parent) reference type determines what all are accessible , which we already discussed
 
+* Note:  If the method in base class is `final`, then we cannot Override it in the child class (boosts performance a little too)
+* In this case, compiler is sure that no one is going to override it, so no need to check this. Hence better performance
+* This is called **_Early Binding_**
+* If `final` is not there, then compiler decides which method to run (obviously child one if child object used) during compile time
+* This is called **_Late Binding_**
+
 ***
+
+#### How to prevent a class from inherited to others
+
+* By putting `final` to a class, that class cannot be inherited by others
+* `public final class Box{`  --> this prevents `BoxWeight` from extending `Box`
+
+***
+
+**Static method cannot be overriden, But can be inherited**
+
+* Overriding depends on object, But static does not depends on object --> hence static cannot be overriden
+
+***
+
+#### Encapsulation & Abstraction
+
+**Encapsulation** --> Wrapping up the implementation of the data members and methods in a class
+
+**Abstraction**  --> Hiding unnecessary details and showing valuable information
+
+* For ex: we use `ArrayList`. But we dont care how java implements it in ArrayList class. This is **Abstraction**
+* Encapsulation is implementation level, Abstraction is design level like what to show and what not needed
+* Encapsulation is like containers. Containing things to groups (class). Making data secure
+* While data hiding focuses on restricting data use in a program to assure data security, data encapsulation focuses on wrapping (or encapsulating) the complex data to present a simpler view to the user.
+* In data hiding, the data has to be defined as private only. In data encapsulation, the data can be public or private.
+* Encapsulation is sub process of Data hiding
+
+***
+***
+
+<div id="id4"></div>
+
+#### 4) Access Control, In-built Packages, Object Class
+
+#### Access Modifiers
+
+* private --> accessible only in that class
+* public  --> accessible everywhere
+* default access modifier (no access specified) --> accessible inside package.Cannot access from another package
+
+![Access Modifiers](/Images/JavaDSA/access_modifier.jpg)
+
+
+**DATA HIDING using private, getters, setters**
+
+* Use private to hide data members
+* Use getters and setters methods which are public, to change or access this hidden data member
+
+> class A
+> 
+>```java
+>package com.ag.packages.a;
+>
+>public class A {
+>private int num;
+>String name;
+>
+>    // constructor should be public to access from outside file
+>    public A(int num, String name){
+>        this.num = num;
+>        this.name = name;
+>    }
+>
+>    // getter
+>    public int getNum(){
+>        return num;
+>    }
+>
+>    //setter
+>    public void setNum(int num){
+>        this.num = num;
+>    }
+>
+>}
+>```
+>
+>
+>class B
+> 
+>```java
+>package com.ag.packages.b;
+>
+>import com.ag.packages.a.A;
+>
+>public class B {
+>public static void main(String[] args) {
+>A objA = new A(100, "AG");
+>
+>//      System.out.println(objA.num);  ERROR 'num' has private access in 'com.ag.packages.a.A'
+>
+>        System.out.println(objA.getNum());  // 100
+>        objA.setNum(255);
+>        System.out.println(objA.getNum());  // 255
+>    }
+>}
+>```
+
+***
+
+#### protected
+
+> class A in package 'a'
+> 
+>```java
+>package com.ag.packages.a;
+>
+>public class A {
+>protected int num;
+>String name;
+>}
+>```
+>
+> class B in package 'b'
+> 
+>```java
+>package com.ag.packages.b;
+>
+>import com.ag.packages.a.A;
+>
+>public class B extends A{
+>    B(){
+>        System.out.println(this.num);  // B object can access it as it inherit A
+>    }
+>    public static void main(String[] args) {
+>        A obj = new A();  // A object cannot access it here
+>        // int n = obj.num;   ERROR--> 'num' has protected access in 'com.ag.packages.a.A'
+>
+>    }
+>}
+>```
+
+***
+
+#### Packages
+
+* two types -- user defined & in built
+
+#### In built packages
+
+* **lang** (java language specific ones) --> operators, primitive datatypes 
+* **io** (input output) --> file reading, buffer reader
+* **util** (utilities)  --> ArrayList, Datastructures stuff, Collections
+* **applet**  --> not recommended. try spring instead
+* **awt**  --> gui related. not recommended
+* **net**  --> network related. not recommended
+
+***
+
+#### Object class - Override
+
+* right click inside class --> select `Generate`
+* then select `override methods` --> then select method to override
+* Intellij will write the override code for us
+
+* hashcode --> is a random integer value. it takes an object, put some algorithm on it and generate integer
+
+All methods in object class 
+```java
+public class A {
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return super.equals(obj);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+    }
+}
+```
+
+***
+
+#### Overriding equals method
+
+equals check if two objects are same
+
+```java
+package com.ag.packages.a;
+
+public class A {
+    int num;
+    float marks;
+
+    A(int num, float marks){
+        this.num = num;
+        this.marks = marks;
+    }
+
+    // equals check if two objects are equal
+    // Override this method to check if variable 'num' of two objects are equal
+    @Override
+    public boolean equals(Object obj) {
+        return this.num == ((A)obj).num;  // Cast obj to class A
+    }
+
+
+    public static void main(String[] args) {
+        A obj1 = new A(12,125.5f);
+        A obj2 = new A(12, 45.8f);
+        System.out.println(obj1.equals(obj2));  // true
+    }
+}
+
+```
+
+***
+
+### instanceof
+
+* `childObject instanceof ChildClass;` --> true
+* `childObject instanceof ParentClass;`  --> true
+* `childObject instanceof Object;`  --> true   (Object class)
+
+***
+
+### To get data about class of an object
+
+* `obj.getClass()`
+* obj.getClass().getName()
+
+```java
+System.out.println(obj2.getClass());  // class com.ag.packages.a.A
+System.out.println(obj2.getClass().getName());  // com.ag.packages.a.A
+```
+
+***
+***
+
+<div id="id5"></div>
+
+### 5) Abstract Classes, Interfaces, Annotations
