@@ -907,3 +907,519 @@ System.out.println(obj2.getClass().getName());  // com.ag.packages.a.A
 <div id="id5"></div>
 
 ### 5) Abstract Classes, Interfaces, Annotations
+
+#### Abstract class
+
+* If a class has abstract method, then class must also be abstract 
+* For abstract classes, we cannot write object for it simply.. Need to override again
+* We can have constructors in abstract class. To use this in child class, use super()
+* In abstract class, `abstract constructors are not allowed`
+* `static abstract methods are not allowed` (abstract are overriden, static cannot be overriden)
+* `static methods are allowed in abstract class`
+* `normal methods are also allowed in abstract class`
+* `final abstract class is not allowed` --> because final class cannot be inherited
+* a class cannot extend 2 classes --> so multiple inheritance not allowed
+
+
+**_Parent Class_**  (abstract class)
+
+```java
+package com.ag.packages.a;
+
+public abstract class Parent {
+    int age;
+
+    Parent(int age){
+        this.age = age;
+    }
+
+    abstract void displayName();
+    abstract void displayAge();
+
+    // STATIC METHOD
+    static void displayMessage(){
+        System.out.println("This is static method in abstract class");
+    }
+
+    // NORMAL METHOD
+    void displayInfo(){
+        System.out.println("This is a regular method from abstract class");
+    }
+}
+```
+
+**_Son.java  (Child of 'Parent class')_**  
+
+```java
+package com.ag.packages.a;
+
+public class Son extends Parent{
+    Son(int age){
+        super(age);
+    }
+
+    @Override
+    void displayName() {
+        System.out.println("Name is Mr. Ram");
+    }
+
+    @Override
+    void displayAge() {
+        System.out.println("Age is " + this.age);
+    }
+}
+```
+
+**_Daughter.java_** (Another child of Parent)
+
+```java
+package com.ag.packages.a;
+
+public class Daughter extends Parent{
+    Daughter(int age){
+        super(age);
+    }
+
+    @Override
+    void displayName() {
+        System.out.println("Name is Mrs Radha");
+    }
+
+    @Override
+    void displayAge() {
+        System.out.println("Age is " + this.age);
+    }
+
+    @Override
+    void displayInfo() {
+        System.out.println("This is a OVERRIDDEN regular method from abstract class");
+    }
+}
+```
+
+
+**_Main method in some class_**
+
+```java
+package com.ag.packages.a;
+
+public class A {
+    public static void main(String[] args) {
+        // Son Class
+        Son son = new Son(12);
+        son.displayName(); // Name is Mr. Ram
+        son.displayAge();  // Age is 12
+
+        // Daughter Class
+        Daughter daughter = new Daughter(23);
+        daughter.displayName(); // Name is Mrs Radha
+        daughter.displayAge(); // Age is 23
+
+        // Parent Class
+        // To create object of Abstract class, Override methods
+
+        Parent parent = new Parent(45) {
+            @Override
+            void displayName() {
+                System.out.println("I am parent");
+            }
+
+            @Override
+            void displayAge() {
+                System.out.println("My age is " + this.age);
+            }
+        };
+
+        parent.displayName();  // I am parent
+        parent.displayAge();  // My age is 45
+
+        // STATIC METHOD
+        Parent.displayMessage();  // This is static method in abstract class
+
+        // Regular method from Parent class
+        son.displayInfo();  // This is a regular method from abstract class
+
+        // Overridden regular method from 'daughter class'
+        daughter.displayInfo();  // This is a OVERRIDDEN regular method from abstract class
+
+
+    }
+}
+```
+
+***
+
+#### Interface
+
+* variables in interface are static and final by default
+* we cannot create objects for interfaces, so no instance variables
+* a class can `implement` more than one interfaces (a class can only extend/inherit one class)
+* two unrelated classes can implement same interface.. that makes it different from inheritance
+* methods in interface are abstract
+* interface methods has some overhead. So avoid it in performance critical situations
+
+***
+
+#### Interface  - Car example
+
+ * **_Engine interface_**
+
+```java
+package com.ag.packages.b;
+
+public interface Engine {
+    int PRICE = 500000;  // this is public static by default
+
+    void start();
+    void stop();
+    void accelerate();
+}
+
+```
+
+* **_Brake interface_**
+
+```java
+package com.ag.packages.b;
+
+public interface Brake {
+    void brake();
+}
+```
+
+* **_Car.java_**
+
+```java
+package com.ag.packages.b;
+
+public class Car implements Engine, Brake{
+    int a = 25;
+
+    @Override
+    public void brake() {
+        System.out.println("Brakes Car");
+    }
+
+    @Override
+    public void start() {
+        System.out.println("Starts Car");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Stops Car");
+    }
+
+    @Override
+    public void accelerate() {
+        System.out.println("Accelerates Car");
+    }
+}
+```
+
+* **_Main.java_**
+
+```java
+package com.ag.packages.b;
+
+public class Main {
+    public static void main(String[] args) {
+        Car car = new Car();
+        car.start();  // Starts Car
+        car.stop();  // Stops Car
+        car.accelerate();  // Accelerates Car
+        car.brake();  // Brakes Car
+
+
+        Engine car2 = new Car();
+        car2.start();
+        // System.out.println(car2.a);  // ERROR Cannot resolve symbol 'a'
+        // Because Constructor determines which method to choose when overriding
+        // and reference type decides what all are accessible
+        // As Engine has no variable 'a', car2 cannot access 'a'. Hence ERROR
+    }
+}
+
+```
+
+***
+
+#### What if two interfaces have same named methods?? - Example
+
+* Same Engine, Brake interface as above
+
+
+* **_Media interface_**
+
+```java
+package com.ag.packages.b;
+
+public interface Media {
+    void start();
+    void stop();
+}
+```
+
+* **_CDPlayer class_**
+
+```java
+package com.ag.packages.b;
+
+public class CDPlayer implements Media{
+    @Override
+    public void start() {
+        System.out.println("Starts Music");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Stops Music");
+    }
+}
+```
+
+
+* **_PowerEngine class_**
+
+```java
+package com.ag.packages.b;
+
+public class PowerEngine implements Engine{
+    @Override
+    public void start() {
+        System.out.println("Starts Power Engine");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Stops Power Engine");
+    }
+
+    @Override
+    public void accelerate() {
+        System.out.println("Accelerates Power Engine");
+    }
+}
+
+```
+
+* **_ElectricEngine class_**
+
+```java
+package com.ag.packages.b;
+
+public class ElectricEngine implements Engine{
+    @Override
+    public void start() {
+        System.out.println("Starts Electric Engine");
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("Stops Electric Engine");
+    }
+
+    @Override
+    public void accelerate() {
+        System.out.println("Accelerates Electric Engine");
+    }
+}
+
+```
+
+* **_NiceCar class_**
+
+```java
+package com.ag.packages.b;
+
+public class NiceCar {
+    private Engine engine;  // private --> hides data
+    private Media player = new CDPlayer();
+
+    public NiceCar(){
+        engine = new PowerEngine();
+    }
+
+    public NiceCar(Engine engine){
+        this.engine = engine;
+    }
+
+    public void start(){
+        engine.start();
+    }
+
+    public void stop(){
+        engine.stop();
+    }
+
+    public void startMusic(){
+        player.start();
+    }
+
+    public void stopMusic(){
+        player.stop();
+    }
+
+    public void upgradeEngine(){
+        this.engine = new ElectricEngine();
+    }
+}
+
+```
+
+* **_Main class_**
+
+```java
+package com.ag.packages.b;
+
+public class Main {
+    public static void main(String[] args) {
+        NiceCar car = new NiceCar();
+        car.start();  // Starts Power Engine
+        car.startMusic();  // Starts Music
+
+        car.upgradeEngine();
+        car.start();  // Starts Electric Engine
+        car.startMusic();  // Starts Music
+
+    }
+}
+```
+
+***
+
+#### interface extends interface
+
+* interface `Two` extends interface `One` works like methods of `One` in `Two`
+
+> One.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public interface One {
+>   void greetOne();
+>}
+>```
+> 
+> Two.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public interface Two extends One{
+>   void greetTwo();
+>}
+>
+>```
+> 
+> Main.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public class Main implements Two{
+>   @Override
+>   public void greetOne() {
+>       System.out.println("One");
+>   }
+>
+>    @Override
+>    public void greetTwo() {
+>        System.out.println("Two");
+>    }
+>}
+>
+>```
+>
+
+***
+
+
+* Annotations
+
+Annotations are internally @interface
+
+***
+
+#### Default interface
+
+* If there is default interface, we can skip its implementation in class if needed
+* Then that default body is used, else it is overriden by implementation in class
+* not recommended usually 
+
+```java
+public interface One {
+    default  void greetOne(){
+        System.out.println("Default greet one");
+    }
+}
+```
+
+***
+
+#### static interface
+
+* static interface method should always have a body in interface itself
+* Because static method cannot be overriden
+
+
+> Interface
+> 
+>```java
+>public interface One {
+>    default  void greetOne(){
+>        System.out.println("Default greet one");
+>    }
+>
+>    static void randomStaticMethod(){
+>        System.out.println("Static method in interface");
+>    }
+>}
+>```
+> 
+> 
+>```java
+>public static void main(String[] args) {
+>     One.randomStaticMethod();  // Static method in interface
+>}
+>```
+>
+
+***
+
+* access modifier of interface method implementation in class should be same or better than that of method's in interface
+* it should not go down( if interface method-->protected, Then implementation method should be protected or public, not private)
+
+***
+
+#### Nested Interface
+
+* Top level interface must be public or default one
+* But nested interface can have any.. so we are using it
+
+```java
+package com.ag.packages.c;
+
+public class C {
+    // Nested interface
+    public interface NestedInterface{
+        boolean isOdd(int num);
+    }
+}
+
+class B implements C.NestedInterface{
+
+    @Override
+    public boolean isOdd(int num) {
+        return (num & 1) == 1;
+    }
+}
+```
+
+```java
+public static void main(String[] args) {
+    B obj = new B();
+    System.out.println(obj.isOdd(5));  // true
+}
+```
