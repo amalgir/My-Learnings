@@ -20,6 +20,7 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 3) [OOP - Principles: Inheritance, Polymorphism, Encapsulation, Abstraction](#id3)
 4) [OOP - Access Control, In-built Packages, Object Class](#id4)
 5) [OOP - Abstract Classes, Interfaces, Annotations](#id5)
+6) [](#id6)
 
 ***
 
@@ -1423,3 +1424,494 @@ public static void main(String[] args) {
     System.out.println(obj.isOdd(5));  // true
 }
 ```
+
+***
+***
+
+<div id="id6"></div>
+
+### 6) Generics, Custom ArrayList, Lambda Expressions, Exception Handling, Object Cloning
+
+#### Custom ArrayList
+
+```java
+package com.ag.packages.c;
+
+import java.util.Arrays;
+
+public class CustomArrayList {
+    private int[] data;
+    private static int DEFAULT_SIZE = 10;
+    private int size = 0;
+
+    // When first called, creates an array of default size
+    public CustomArrayList(){
+        this.data = new int[DEFAULT_SIZE];
+    }
+
+    public void add(int num){
+        if(isFull()){
+            resize();
+        }
+        data[size++] = num;  // first put value in index, then increment index
+    }
+
+
+    private boolean isFull() {
+        return this.size == this.data.length;
+    }
+
+
+    private void resize() {
+        int[] temp = new int[data.length * 2];
+
+        // copy data elements to temp
+        for (int i=0; i < data.length; i++){
+            temp[i] = data[i];
+        }
+        data = temp;
+    }
+
+    public int remove(){
+        int removed = data[--size];
+        return removed;
+    }
+
+    public int get(int index){
+        return data[index];
+    }
+
+    public int size(){
+        return size;
+    }
+
+    public void set(int index, int value){
+        data[index] = value;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomArrayList{" +
+                "data=" + Arrays.toString(data) +
+                ", size=" + size +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        CustomArrayList list = new CustomArrayList();
+        for(int i=0; i < 15; i++){
+            list.add(i*2);
+        }
+        System.out.println(list);
+        //OUTPUT: CustomArrayList{data=[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 0, 0, 0, 0, 0], size=15}
+        // if to string not overriden we get output as --> com.ag.packages.c.CustomArrayList@4dd8dc3
+    }
+
+}
+
+```
+
+* Here it is done only for int
+* Real ArrayList can have many datatype
+* `ArrayList<Integer> list2 = new ArrayList<>();`  
+* Here `<Integer>` is generics
+
+***
+
+#### Genrerics
+
+**Restrictions on Generics**  -> https://docs.oracle.com/javase/tutorial/java/generics/restrictions.html
+
+```java
+// CUSTOM GENERIC ARRAYLIST
+
+package com.ag.packages.c;
+
+import java.util.Arrays;
+
+public class CustomGenericArrayList<T> {
+    private Object[] data;
+    private static int DEFAULT_SIZE = 10;
+    private int size = 0;
+
+    // When first called, creates an array of default size
+    public CustomGenericArrayList(){
+        this.data = new Object[DEFAULT_SIZE];
+    }
+
+    public void add(T num){
+        if(isFull()){
+            resize();
+        }
+        data[size++] = num;  // first put value in index, then increment index
+    }
+
+
+    private boolean isFull() {
+        return this.size == this.data.length;
+    }
+
+
+    private void resize() {
+        Object[] temp = new Object[data.length * 2];
+
+        // copy data elements to temp
+        for (int i=0; i < data.length; i++){
+            temp[i] = data[i];
+        }
+        data = temp;
+    }
+
+    public T remove(){
+        T removed = (T)(data[--size]);  // Casting as adding bigger 'Object' to smaller T
+        return removed;
+    }
+
+    public T get(int index){
+        return (T)(data[index]);
+    }
+
+    public int size(){
+        return size;
+    }
+
+    public void set(int index, T value){
+        data[index] = value;
+    }
+
+    @Override
+    public String toString() {
+        return "CustomArrayList{" +
+                "data=" + Arrays.toString(data) +
+                ", size=" + size +
+                '}';
+    }
+
+    public static void main(String[] args) {
+        CustomGenericArrayList<Integer> list = new CustomGenericArrayList<>();
+        for(int i=0; i < 15; i++){
+            list.add(i*2);
+        }
+        System.out.println(list);
+        // CustomArrayList{data=[0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24, 26, 28, null, null, null, null, null], size=15}
+
+
+        CustomGenericArrayList<String> list2 = new CustomGenericArrayList<>();
+        for(int i=0; i < 15; i++){
+            list2.add("String_" + String.valueOf(i));
+        }
+        System.out.println(list2);
+        // CustomArrayList{data=[String_0, String_1, String_2, String_3, String_4, String_5, String_6, String_7, String_8, String_9, String_10, String_11, String_12, String_13, String_14, null, null, null, null, null], size=15}
+
+    }
+
+}
+
+```
+
+* `T` is used here 
+* But object creation time, byte code dont know what `T` is. So we used Object class
+* Then type cast it to T 
+
+***
+
+#### Wildcards
+
+* We can restrict the custom array list to have only a particular set of types
+
+```java
+// here T should either be Number or its subclasses
+// to restrict non numbers like String from used in Custom ArrayList
+public class CustomGenericArrayList<T extends Number> {
+```
+
+* By doing so, it gives error for this  --> `CustomGenericArrayList<String> list2 = new CustomGenericArrayList<>();`
+* But we can use it for Numbers like int, float..
+
+
+
+**Here we can only pass Number type**
+```java
+public void getList(List<Number> list){
+    // do something
+    // Here you can only pass Number type
+}
+```
+
+
+**Here you can only pass Number or its subclasses**
+
+
+```java
+public void getList(List<? extends Number> list){
+    // do something
+    // Here you can only pass Number or its subclasses
+}
+```
+
+
+***
+
+
+#### Comparison Objects
+
+* Comparable<> is an interface in java
+* Interfaces can have generics
+
+```java
+package com.ag.packages.c;
+
+public class Student implements Comparable<Student>{
+    int rno;
+    float marks;
+
+    public Student(int rno, float marks){
+        this.rno = rno;
+        this.marks = marks;
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        int diff = (int)(this.marks - o.marks);
+        return diff;
+    }
+
+
+    // MAIN
+    public static void main(String[] args) {
+        Student student1 = new Student(12, 25.78f);
+        Student student2 = new Student(27, 35.8f);
+
+        if(student1.compareTo(student2) < 0){
+            System.out.println("Student2 has more marks");  //Student2 has more marks
+        }
+    }
+}
+
+```
+
+
+Same code can be modified to sort a list of Student objects
+
+```java
+package com.ag.packages.c;
+
+import java.util.Arrays;
+
+public class Student implements Comparable<Student>{
+    int rno;
+    float marks;
+
+    public Student(int rno, float marks){
+        this.rno = rno;
+        this.marks = marks;
+    }
+
+    @Override
+    public int compareTo(Student o) {
+        int diff = (int)(this.marks - o.marks);
+        return diff;
+    }
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "rno=" + rno +
+                ", marks=" + marks +
+                '}';
+    }
+
+    // MAIN
+    public static void main(String[] args) {
+        Student student1 = new Student(10, 25.78f);
+        Student student2 = new Student(50, 75.8f);
+        Student student3 = new Student(40, 89.46f);
+        Student student4 = new Student(90, 37.5f);
+        Student student5 = new Student(56, 42.8f);
+
+       Student[] list = {student1, student2, student3, student4, student5};
+        Arrays.sort(list);
+        System.out.println(Arrays.toString(list));
+        /*
+        [Student{rno=10, marks=25.78}, Student{rno=90, marks=37.5}, Student{rno=56, marks=42.8}, Student{rno=50, marks=75.8}, Student{rno=40, marks=89.46}]
+
+         Sorted in ascending order using marks since we wrote compareto using marks
+         */
+
+    }
+}
+
+```
+
+We can directly give it inside Arrays.sort() method
+
+```java
+public static void main(String[] args) {
+    Student student1 = new Student(10, 25.78f);
+    Student student2 = new Student(50, 75.8f);
+    Student student3 = new Student(40, 89.46f);
+    Student student4 = new Student(90, 37.5f);
+    Student student5 = new Student(56, 42.8f);
+
+   Student[] list = {student1, student2, student3, student4, student5};
+    Arrays.sort(list, new Comparator<Student>() {
+        @Override
+        public int compare(Student o1, Student o2) {
+            return (int)(o1.rno - o2.rno);
+        }
+    });
+    System.out.println(Arrays.toString(list));
+    // SORTED USING RNO
+    // [Student{rno=10, marks=25.78}, Student{rno=40, marks=89.46}, Student{rno=50, marks=75.8}, Student{rno=56, marks=42.8}, Student{rno=90, marks=37.5}]
+    
+}
+```
+
+* In above code, use `return -(int)(o1.rno - o2.rno);`  for descending order
+* Above code can be replaced with lambda function --> `Arrays.sort(list, (o1, o2) -> -(int)(o1.marks - o2.marks));`
+
+
+***
+
+#### Lambda functions
+
+```java
+ArrayList<Integer> arr = new ArrayList<>();
+for (int i=0; i<5;i++){
+    arr.add(i+1);
+}
+
+arr.forEach((item) -> System.out.print(item*2 + " "));  // 2 4 6 8 10 
+
+// OR
+        
+Consumer<Integer> lambdaFunction =  (item) -> System.out.print(item*2 + " ");  // 2 4 6 8 10
+arr.forEach(lambdaFunction);
+```
+
+**Lambda functions example with interface**
+
+```java
+package com.ag.packages.c;
+
+public class Main{
+
+    public static void main(String[] args) {
+        Operation sum = (a,b) -> a+b;
+        Operation sub = (a,b) -> a-b;
+        Operation prod = (a,b) -> a*b;
+
+        Main myCalculator = new Main();
+        System.out.println(myCalculator.operate(5, 4, sum)); // 9
+
+        System.out.println(myCalculator.operate(5, 4, prod)); // 20
+        
+    }
+
+    private int operate(int a, int b, Operation op){
+        return op.operation(a, b);
+    }
+
+}
+
+interface Operation{
+    int operation(int a, int b);
+}
+
+```
+
+***
+
+#### Exception Handling
+
+* checked Exception --> Exception detected by compiler
+* unchecked Exception  --> Compiler cannot detect.. (divide by 0)
+* `Object` class child is `Throwables`. 
+* `Throwables` has two child - `Exceptions` & `Error`
+* Exception has 2 type - `Checked` & `Unchecked`
+
+```java
+int a = 5;
+int b = 0;
+try{
+    System.out.println(a/b);
+}
+catch (Exception e){
+    System.out.println(e.getMessage());  // / by zero
+}
+finally {
+    // Execute even if there is exception or not
+    System.out.println("This will always execute");
+}
+```
+
+***
+
+**throws**
+
+```java
+public class Main{
+
+    public static void main(String[] args) {
+        int a = 5;
+        int b = 0;
+        try{
+            divide(a, b);
+        }
+        catch (ArithmeticException e){
+            System.out.println(e.getMessage());  // / by zero
+        }
+        finally {
+            // Execute even if there is exception or not
+            System.out.println("This will always execute");
+        }
+        
+        /*
+        Please Do not divide by 0
+        This will always execute
+         */
+    }
+
+    static int divide(int a, int b) throws ArithmeticException{
+        if(b == 0){
+            throw new ArithmeticException("Please Do not divide by 0");
+        }
+        return a/b;
+    }
+
+}
+```
+
+* throws  --> declaration saying this method may throw an exception
+* throw  --> throw exception
+***
+
+* We can use multiple catch
+* the order of catch is important as top exception is given priority
+* put `Exception` at bottom only, since all other exceptions are sub of it
+
+```java
+public static void main(String[] args) {
+    try{
+        throw new Exception("Dummy Exception to test");
+    }
+    catch (ArithmeticException e){
+        System.out.println(e.getMessage());  // / by zero
+    }
+    catch (Exception e){
+        System.out.println("Regular exception");
+    }
+    finally {
+        // Execute even if there is exception or not
+        System.out.println("This will always execute");
+    }
+
+    /* OUTPUT
+    Regular exception
+    This will always execute
+     */
+    }
+```
+
+***
+
