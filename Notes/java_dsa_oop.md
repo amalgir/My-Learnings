@@ -20,7 +20,8 @@ These are notes made for revision, after watching the Java DSA playlist of Kunal
 3) [OOP - Principles: Inheritance, Polymorphism, Encapsulation, Abstraction](#id3)
 4) [OOP - Access Control, In-built Packages, Object Class](#id4)
 5) [OOP - Abstract Classes, Interfaces, Annotations](#id5)
-6) [](#id6)
+6) [Generics, Custom ArrayList, Lambda Expressions, Exception Handling, Object Cloning](#id6)
+7) [Collections Framework, Vector Class, Enums in Java](#id7)
 
 ***
 
@@ -1829,6 +1830,7 @@ interface Operation{
 * `Object` class child is `Throwables`. 
 * `Throwables` has two child - `Exceptions` & `Error`
 * Exception has 2 type - `Checked` & `Unchecked`
+* `finally` is executed always. There can only be ONE finally block
 
 ```java
 int a = 5;
@@ -1914,4 +1916,188 @@ public static void main(String[] args) {
 ```
 
 ***
+
+#### Creating Custom Exception
+
+> MyException.java
+> 
+>```java
+>public class MyException extends Exception{
+>   public MyException(String message){
+>       super(message);
+>   }
+>}
+>```
+> 
+> Main Method
+> 
+>```java
+>public static void main(String[] args) {
+>    try{
+>        String name = "AG";
+>        if (name.equals("AG")){
+>            throw new MyException("Name is AG");
+>        }
+>    }
+>    catch (MyException e){
+>        System.out.println("MyException occurred");  // MyException occurred
+>        System.out.println(e.getMessage());  // Name is AG
+>    }
+>    catch (ArithmeticException e){
+>        System.out.println(e.getMessage());  // / by zero
+>    }
+>    catch (Exception e){
+>        System.out.println("Regular exception");
+>    }
+>    finally {
+>        // Execute even if there is exception or not
+>        System.out.println("This will always execute");
+>    }
+>
+>    /* OUTPUT
+>    MyException occurred
+>    Name is AG
+>    This will always execute
+>     */
+>}
+>```
+
+***
+
+#### Object Cloning
+
+_**Conventional way of creating copies of object**_
+
+> Human.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public class Human {
+>    int age;
+>    String name;
+>
+>    public Human(int age, String name){
+>        this.age = age;
+>        this.name = name;
+>    }
+>
+>    public Human(Human other){
+>        this.age = other.age;
+>        this.name = other.name;
+>    }
+>}
+>```
+>
+>Main
+> 
+>```java
+>public class Main{
+>    public static void main(String[] args) {
+>        // Creating a human and then its copy in conventional way
+>        Human me = new Human(22, "AG");
+>        Human myTwin = new Human(me);
+>
+>    }
+>}
+>```
+
+***
+
+_**Using Cloneable interface**_
+
+>Human.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public class Human implements Cloneable{
+>    int age;
+>    String name;
+>    int[] arr;
+>
+>    public Human(int age, String name){
+>        this.age = age;
+>        this.name = name;
+>        this.arr = new int[]{ 1, 2, 3, 4, 5};
+>    }
+>
+>    @Override
+>    public Object clone() throws CloneNotSupportedException{
+>        return super.clone();
+>    }
+>}
+>```
+> 
+>Main.java
+> 
+>```java
+>package com.ag.packages.c;
+>
+>public class Main{
+>    public static void main(String[] args) throws CloneNotSupportedException {
+>        // Creating a human and then its copy in conventional way
+>        Human me = new Human(22, "AG");
+>        Human myTwin = (Human) me.clone();
+>        System.out.println(myTwin.name + " " + myTwin.age);
+>
+>       // SHALLOW COPY
+>        System.out.println(Arrays.toString(me.arr)); // [1, 2, 3, 4, 5]
+>        myTwin.arr[0] = 999;
+>        System.out.println(Arrays.toString(me.arr)); // [999, 2, 3, 4, 5]
+>    }
+>}
+>```
+
+* `public class Human implements Cloneable` -> This tells the jvm 'Human' class is need to be cloned
+* for primitive, the clone is creating new objects. For non primitive say like array & String here, it is pointing to same object
+* So this clone is `shallow copy` as we make change in one object, it is reflected in the other one
+* In `deep copy`, this wont happen. A new object is created and older object is copied to this new one
+
+#### Making above shallow copy clone to  deep copy
+
+```java
+//  MODIFYING ABOVE CLONE METHOD TO MAKE IT DEEP COPY THE ARRAY
+
+@Override
+public Object clone() throws CloneNotSupportedException{
+    // shallow copy
+    Human twin = (Human)super.clone();
+
+    // Deep copy
+    twin.arr = new int[twin.arr.length];
+    for (int i=0; i < twin.arr.length; i++){
+        twin.arr[i] = this.arr[i];
+    }
+    return twin;
+}
+```
+
+```java
+public static void main(String[] args) throws CloneNotSupportedException {
+    // Creating a human and then its copy in conventional way
+    Human me = new Human(22, "AG");
+    Human myTwin = (Human) me.clone();
+    System.out.println(myTwin.name + " " + myTwin.age);
+
+    // DEEP COPY
+    System.out.println(Arrays.toString(me.arr));  // [1, 2, 3, 4, 5]
+    System.out.println(Arrays.toString(myTwin.arr));  // [1, 2, 3, 4, 5]
+
+    // CHANGING VALUE IN TWIN
+    myTwin.arr[0] = 999;
+
+    System.out.println(Arrays.toString(me.arr));  // [1, 2, 3, 4, 5]
+    System.out.println(Arrays.toString(myTwin.arr));  // [999, 2, 3, 4, 5]
+
+}
+```
+
+***
+***
+
+<div id="id7"></div>
+
+### 7) Collections Framework, Vector Class, Enums in Java
+
 
