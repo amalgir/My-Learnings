@@ -2100,4 +2100,148 @@ public static void main(String[] args) throws CloneNotSupportedException {
 
 ### 7) Collections Framework, Vector Class, Enums in Java
 
+![Java interfaces and classes](/Images/JavaDSA/collections.jpg)
 
+From Diagram,
+* `Collection` is an interface and `List` interface extends `Collection`
+* Both are in java.util
+* `ArrayList` implements `List` interface
+* So we can write `List<Integer> list = new ArrayList<>();`  ->where LHS is parent and RHS is child  (Here List is interface, ArrayList is class)
+* Similarly, `List<Integer> list2 = new LinkedList<>();`
+
+#### Vector
+
+* In ArrayList, multiple thread can access the ArrayList at one time
+* In Vector, only one thread can access the Vector, while the other one waits. (called Vector synchronisation)
+
+```java
+Vector<Integer> vector = new Vector<>();
+vector.add(45);
+vector.add(12);
+vector.add(78);
+vector.add(4);
+System.out.println(vector);  // [45, 12, 78, 4]
+```
+
+
+***
+
+### Java Enum
+
+* Java enum has predefined objects. (like monday, tuesday... below)
+* enum constants are internally like `public static final Week Monday = new Week();`
+* enum cannot extend anything. enum cannot be a super class
+* enum can implement interfaces
+* abstract methods are not allowed inside enum.
+* We can have regular methods in enum
+
+```java
+public class Basic {
+    enum Week{
+        Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday
+        // These are enum constants
+        //These are public, static , final by default
+        // Since its final, we cannot create child enums
+        // type is Week
+    }
+
+    public static void main(String[] args) {
+
+        Week today = Week.Monday;
+        System.out.println(today);  // Monday
+
+        for(Week day : Week.values()){
+            System.out.print(day + " ");
+            // Monday Tuesday Wednesday Thursday Friday Saturday Sunday
+        }
+
+        // Ordinal --> position or index
+        System.out.println(today.ordinal());  // 0
+
+    }
+}
+```
+
+***
+
+**_Enum constructor_**
+
+```java
+public class Basic {
+    enum Week{
+        Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday;
+
+        // Constructor for enum
+        // This is NOT public or protected. ONLY private or default allowed
+        // why? If we allow, it will allow to create more than these specified objects
+        //We dont want to create new objects in enum concept
+        // internally: public static final Week Monday = new Week();
+
+        Week(){
+            System.out.println("Constructor called for " + this);
+        }
+
+    }
+
+    public static void main(String[] args) {
+
+        Week today = Week.Monday;
+
+        /* OUTPUT
+        Constructor called for Monday
+        Constructor called for Tuesday
+        Constructor called for Wednesday
+        Constructor called for Thursday
+        Constructor called for Friday
+        Constructor called for Saturday
+        Constructor called for Sunday
+         */
+
+    }
+}
+```
+
+***
+
+**_enum implements interface_**
+
+interface One
+```java
+package com.ag.packages.c;
+
+public interface One {
+    void hello();
+}
+```
+
+Basic.java
+```java
+public class Basic {
+    
+    enum Week implements One{
+        Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday;
+
+        @Override
+        public void hello() {
+            System.out.println("Week says hello");
+        }
+    }
+
+    public static void main(String[] args) {
+
+        Week today = Week.Monday;
+        today.hello(); // Week says hello
+
+    }
+}
+```
+
+***
+
+* enum.valueOf returns enum constant
+
+`Week tuesday = Week.valueOf("Tuesday");`
+
+***
+***
+***
