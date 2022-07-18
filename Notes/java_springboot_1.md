@@ -5,6 +5,7 @@
 ## Contents
 
 1) [Introduction](#id1)
+2) [SpringBoot Auto-Configuration](#id2)
 
 ***
 
@@ -85,6 +86,43 @@ Another exapmle is `spring-boot-starter-web` --> adds spring mvc, web mvc, tomca
 * Then New Project
 * From left panel, select spring initializer or spring assistant
 * Give details like in initializer
-* Select dependecies and click ok
+* Select dependecies (select web) and click ok
 * Springboot project is created
  
+**Faced some issues**  --> Didnt run, showed red marks as import error
+* solved my `Build` --> `Rebuild Project`
+* Then error came --> updated pom java version source and target which intellij automatically did after asking
+* Updated intellij to latest version
+* Now run java class file to see spring boot running
+
+![Intellij](/Images/SpringBoot/springboot_framework_intellij.jpg)
+
+***
+***
+
+<div id="id2"></div>
+
+### 2) SpringBoot Auto-Configuration
+
+####Theory
+
+* When we use Spring MVC, we need to configure -Component scan, Dispatcher server, View resolver, Web jars for delivering static content
+* When we use Hibernate/JPA , we need to configure - data source, entity manager factory/session factory, transaction manager
+* SpringBoot automates these things
+
+* While choosing dependency, we added web which adds this one in pom file 
+```xml
+<dependency>
+   <groupId>org.springframework.boot</groupId>
+   <artifactId>spring-boot-starter-web</artifactId>
+</dependency>
+```
+
+* Add this logging level in `application.properties` file in  `src/main/resources`
+   > `logging.level.org.springframework.web=debug`
+
+* Changing this logging level to this `logging.level.org.springframework=debug` gives some more logs where we can see dispatcherServlet logs - meaning springboot has autoconfigured everything
+
+* spring-webmvc.jar file has dispatcherServlet class files.
+
+* There will be a section called `Negative matches:` in debug logs where we can see what all dependencies are not auto-configured. If we add some to pom, then springboot detects it and autoconfigure
