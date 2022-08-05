@@ -19,3 +19,4 @@ A repo to organize and share my learnings
 * [DJANGO](Notes/django_note.md)
 * [MATPLOTLIB (python library)](Notes/matplotlib_note.md)
 * [SPRING BOOT](Notes/java_springboot_1.md)
+* [FLASK](Notes/python_flask_1.md)
