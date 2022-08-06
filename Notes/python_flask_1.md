@@ -5,6 +5,9 @@
 2) [Styling & Templates](#id2)
 3) [Sending data to templates](#id3)
 4) [Template Inheritance](#id4)
+5) [Models & Databases](#id5)
+6) [Project Restructure](#id6)
+7) [Model Relationships](#id7)
 
 ***
 
@@ -463,3 +466,394 @@ dict content can be accessed using `{{ dictName.key }}`
 <div id="id4"></div>
 
 ### 4) Template Inheritance
+
+* Multiple pages can have same features like nav bar
+* In that case, create a feature for one html file and then inherit it in another html file
+* This is done using `{% extends 'base.html' %}`
+
+
+* But in `base.html`, title is `Base Page`. For `home.html` it needs to be 'Home Page'. For this use `block`
+
+  > Put this in base.html
+  >```html
+  ><title>
+  >    {% block title %}
+  >      Base Page
+  >    {% endblock %}
+  ></title>
+  >```
+  > 
+  > Then put this in home.html
+  > 
+  >```html
+  >{% extends 'base.html' %}
+  >
+  >{% block title %}
+  >    Home Page
+  >{% endblock %}
+  >``` 
+  > 
+  > `Home Page` in home.html replaces code inside block in base.html
+
+
+* here `title` is the block name. We can give any name here. Then call this in child html page and replace the parents block body with child's block body
+
+
+* To make the `Home` and `Market` options in nav bar work, edit href of respective options in `base.html`.
+* Use `{{ url_for('home_page') }}` to get url of home page(/home) from python function name
+
+  ```html
+  <ul class="navbar-nav mr-auto">
+    <li class="nav-item active">
+       <a class="nav-link" href="{{ url_for('home_page') }}">Home <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item">
+       <a class="nav-link" href="{{ url_for('market_page') }}">Market</a>
+    </li>
+  </ul>
+  ```
+ 
+***
+
+#### base.html
+
+```html
+<!doctype html>
+<html lang="en">
+   <head>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+      <title>
+          {% block title %}
+            Base Page
+          {% endblock %}
+      </title>
+   </head>
+   <body>
+      <!-- Navbar here -->
+      <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+         <a class="navbar-brand" href="#">Flask Market</a>
+         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+           <span class="navbar-toggler-icon"></span>
+         </button>
+         <div class="collapse navbar-collapse" id="navbarNav">
+           <ul class="navbar-nav mr-auto">
+             <li class="nav-item active">
+                 <a class="nav-link" href="{{ url_for('home_page') }}">Home <span class="sr-only">(current)</span></a>
+             </li>
+             <li class="nav-item">
+                 <a class="nav-link" href="{{ url_for('market_page') }}">Market</a>
+             </li>
+           </ul>
+           <ul class="navbar-nav">
+               <li class="nav-item">
+                   <a class="nav-link" href="#">Login</a>
+               </li>
+               <li class="nav-item">
+                   <a class="nav-link" href="#">Register</a>
+               </li>
+           </ul>
+         </div>
+      </nav>
+
+      {% block content %}
+      {% endblock %}
+      <!-- Future Content here -->
+
+
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV" crossorigin="anonymous"></script>
+   </body>
+   <style>
+      body {
+      background-color: #212121;
+      color: white
+      }
+   </style>
+</html>
+```
+
+***
+
+#### home.html
+
+```html
+{% extends 'base.html' %}
+
+{% block title %}
+    Home Page
+{% endblock %}
+
+{% block content %}
+    <h1>This is the content of Home page</h1>
+{% endblock %}
+```
+
+***
+
+#### market.html
+
+```html
+{% extends 'base.html' %}
+
+{% block title %}
+    Market Page
+{% endblock %}
+
+{% block content %}
+    <table class="table table-hover table-dark">
+        <thead>
+            <tr>
+                <!-- Your Columns HERE -->
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Barcode</th>
+                <th scope="col">Price</th>
+                <th scope="col">Options</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Your rows inside the table HERE: -->
+            {% for item in items %}
+                <tr>
+                    <td>{{ item.id }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.barcode }}</td>
+                    <td>{{ item.price }}</td>
+                    <td>
+                        <button class="btn btn-outline btn-info">More Info</button>
+                        <button class="btn btn-outline btn-success">Purchase this Item</button>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+```
+
+***
+***
+
+<div id="id5"></div>
+
+### 5) Models & Databases
+
+>Install flask sqlite package
+> 
+> `pip install flask-sqlalchemy`
+
+> Creating a model
+> 
+>```python
+>from flask import Flask, render_template
+>from flask_sqlalchemy import SQLAlchemy
+>
+>app = Flask(__name__)
+>
+>app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///market.db"
+>db = SQLAlchemy(app)
+>
+>
+>class Item(db.Model):
+>    id = db.Column(db.Integer(), primary_key=True)
+>    name = db.Column(db.String(length=30), nullable=False, unique=True)
+>    price = db.Column(db.Integer(), nullable=False)
+>    barcode = db.Column(db.String(length=12), nullable=False, unique=True)
+>    description = db.Column(db.String(length=1024), nullable=False, unique=True)
+>```
+>
+
+***
+
+> **Fetch/Query data from database**
+> 
+>```python
+># For testing only. To create some dummy data in database
+># Remove these after testing
+>db.create_all()
+>item1 = Item(name="Iphone", price=25000, barcode="454879561154", description="Good phone")
+>db.session.add(item1)
+>db.session.commit()
+>print(Item.query.all())  # [<Item 1>]
+>
+>item2 = Item(name="Laptop", price=55000, barcode="78953458972", description="Good laptop")
+>db.session.add(item2)
+>db.session.commit()
+>print(Item.query.all())  # [<Item 1>, <Item 2>]  -> <modelName id>
+>``` 
+>
+> We can reformat the Item.query.all() by adding this method in class Item
+> 
+>```python
+># To format result of Item.query.all()
+>def __repr__(self):
+>   return f"Item {self.name}"
+>``` 
+>
+>This will print the result as 
+>```
+>[Item Iphone]
+>[Item Iphone, Item Laptop]
+>```
+>
+>To print all details -
+> 
+>```python
+>for item in Item.query.all():
+>    print(str(item.id) + " " + item.name + " " + str(item.price) + " " + str(item.barcode))
+>
+># 1 Iphone 25000 454879561154
+># 2 Laptop 55000 78953458972
+>```
+>
+>**Filter data**
+> 
+>```python
+>for item in Item.query.filter_by(price=55000):
+>    print(item.name)  # Laptop
+>```
+
+***
+
+#### To display database data in table
+
+```python
+@app.route("/market")
+def market_page():
+    items = Item.query.all()
+    return render_template("market.html", items=items)
+```
+
+_Full python file_
+
+```python
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///market.db"
+db = SQLAlchemy(app)
+
+
+class Item(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=30), nullable=False, unique=True)
+    price = db.Column(db.Integer(), nullable=False)
+    barcode = db.Column(db.String(length=12), nullable=False, unique=True)
+    description = db.Column(db.String(length=1024), nullable=False, unique=True)
+
+
+@app.route("/")   # Decorator
+@app.route("/home")
+def home_page():
+    return render_template("home.html")
+
+
+@app.route("/market")
+def market_page():
+    items = Item.query.all()
+    return render_template("market.html", items=items)
+```
+
+NOTE: We can also us sqlbrowser software to view contents of database
+
+***
+***
+
+<div id="id6"></div>
+
+### 6) Project Restructure
+
+* move routes to route.py
+* move models to models.py
+* since different files are interdependent, cyclic imports occur
+* So create run.py file which will import different files
+* Make market package and create `__init__` file
+* `__init__` file has common ones like `app` and `db`
+* import necessary ones in respective files
+* models is imported in route
+* route is imported in `__init__`
+
+![Project Structure](/Images/Flask/flask_6.png)
+
+#### init.py
+
+```python
+from flask import Flask, render_template
+from flask_sqlalchemy import SQLAlchemy
+
+app = Flask(__name__)
+app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///market.db"
+db = SQLAlchemy(app)
+
+from market import routes
+```
+
+***
+
+#### routes.py
+
+```python
+from market import app
+from flask import render_template
+from market.models import Item
+
+
+@app.route("/")   # Decorator
+@app.route("/home")
+def home_page():
+    return render_template("home.html")
+
+
+@app.route("/market")
+def market_page():
+    items = Item.query.all()
+    return render_template("market.html", items=items)
+```
+
+***
+
+#### models.py
+
+```python
+from market import db
+
+
+class Item(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=30), nullable=False, unique=True)
+    price = db.Column(db.Integer(), nullable=False)
+    barcode = db.Column(db.String(length=12), nullable=False, unique=True)
+    description = db.Column(db.String(length=1024), nullable=False, unique=True)
+
+    def __repr__(self):
+        return f"Item {self.name}"
+```
+
+***
+
+#### run.py
+
+```python
+from market import app
+
+if __name__ == "__main__":
+    app.run(debug=True)
+
+```
+
+***
+***
+
+<div id="id7"></div>
+
+### 7) Model Relationships
