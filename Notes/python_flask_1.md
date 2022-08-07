@@ -857,3 +857,98 @@ if __name__ == "__main__":
 <div id="id7"></div>
 
 ### 7) Model Relationships
+
+>`items = db.relationship("Item", backref="owned_user", lazy=True)`
+> 
+>"Item" is class name.
+> 
+> We can get all items of an user. But to get user from an item like laptop, we need some reference to back track it. So here 'owned-user' can be called to get that details
+> 
+> `lazy=True` is used to get all items in a single shot
+> 
+
+> Note
+> 
+> db.drop_all()  --> deletes all db contents
+> dn.create_all() --> creates db file
+> 
+
+#### routes.py with model relationship
+
+```python
+from market import db
+
+
+class User(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    username = db.Column(db.String(length=30), nullable=False, unique=True)
+    email_address = db.Column(db.String(length=50), nullable=False, unique=True)
+    password_hash = db.Column(db.String(length=60), nullable=False)
+    budget = db.Column(db.Integer(), nullable=False, default=1000)
+    items = db.relationship("Item", backref="owned_user", lazy=True)
+
+
+class Item(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    name = db.Column(db.String(length=30), nullable=False, unique=True)
+    price = db.Column(db.Integer(), nullable=False)
+    barcode = db.Column(db.String(length=12), nullable=False, unique=True)
+    description = db.Column(db.String(length=1024), nullable=False, unique=True)
+    owner = db.Column(db.Integer(), db.ForeignKey("user.id"))
+
+    def __repr__(self):
+        return f"Item {self.name}"
+
+```
+
+> **Code to create a dummy user**
+> 
+> Before creating this, delete database using drop_all() and create using create_all()
+> 
+>```python
+>u1 = User(username="ag", password_hash="123456789", email_address="ag@gmail.com")
+>db.session.add(u1)
+>db.session.commit()
+>
+>for user in User.query.all():
+>    print(user.username)  # ag
+>```
+>
+>**Now create dummy items**
+> 
+>```python
+>item1 = Item(name="Iphone", price=25000, barcode="454879561154", description="Good phone")
+>db.session.add(item1)
+>db.session.commit()
+>print(Item.query.all())  # [<Item 1>]
+>
+>item2 = Item(name="Laptop", price=55000, barcode="78953458972", description="Good laptop")
+>db.session.add(item2)
+>db.session.commit()
+>print(Item.query.all())  # [<Item 1>, <Item 2>]  -> <modelName id>
+>```
+> 
+>**Checking owner of an item**
+>
+>```python
+>item1 = Item.query.filter_by(name="Laptop").first()
+>print(item1)  # Item Laptop
+>print(item1.owner)  # None
+>```
+>Here there is no owner for this item 'Laptop'. So 'None' is shown
+>
+
+***
+
+#### Setting owner of an item
+
+```python
+item1 = Item.query.filter_by(name="Laptop").first()
+item1.owner = User.query.filter_by(username="ag").first().id
+db.session.add(item1)
+db.session.commit()
+```
+
+Here `id` is used as it is the foreign key
+
+***
