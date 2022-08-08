@@ -8,6 +8,8 @@
 5) [Models & Databases](#id5)
 6) [Project Restructure](#id6)
 7) [Model Relationships](#id7)
+8) [Flask Forms](#id8)
+9) [Flask Validations](#id9)
 
 ***
 
@@ -952,3 +954,139 @@ db.session.commit()
 Here `id` is used as it is the foreign key
 
 ***
+
+#### Getting user object from item object
+
+```python
+item1 = Item.query.filter_by(name="Laptop").first()
+
+print(item1.owned_user.username)  # ag
+```
+
+***
+***
+
+<div id="id8"></div>
+
+### 8) Flask Forms
+
+> `pip install flask-wtf`
+> 
+> `pip install wtforms`
+
+***
+
+#### form.py
+
+```python
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+
+
+class RegisterForm(FlaskForm):
+    username = StringField(label="User Name:")
+    email_address = StringField(label="Email Address:")
+    password1 = PasswordField(label="Password:")
+    password2 = PasswordField(label="Confirm Password:")
+    submit = SubmitField(label="Create Account")
+
+
+```
+
+***
+
+#### Add this in routes.py
+
+```python
+from market.forms import RegisterForm
+
+@app.route("/register")
+def register_page():
+    form = RegisterForm()
+    return render_template("register.html", form=form)
+```
+
+***
+
+#### Setting Secret Key
+
+> Create random hex key (We can run this code in terminal python to just get the code)
+> 
+>```python
+>import os
+>print(os.urandom(12).hex())  # 'e91f71d2d0e4e1359dd2304b'
+>```
+>
+>Now set it in `__init__.py`
+> 
+>`app.config["SECRET_KEY"] = "e91f71d2d0e4e1359dd2304b"`
+
+***
+
+#### Editing nav bar Register href in base.html
+
+```html
+<li class="nav-item">
+   <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
+</li>
+```
+
+***
+
+#### register.html
+
+```html
+{% extends 'base.html' %}
+{% block title %}
+Register Page
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-register" style="color:white">
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please create your Account
+            </h1>
+            <br>
+
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="User Name") }}
+
+            {{ form.email_address.label() }}
+            {{ form.email_address(class="form-control", placeholder="Email Adddress") }}
+
+            {{ form.password1.label() }}
+            {{ form.password1(class="form-control", placeholder="Password") }}
+
+            {{ form.password2.label() }}
+            {{ form.password2(class="form-control", placeholder="Confirm Password") }}
+
+            <br>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+        </form>
+    </div>
+</body>
+{% endblock %}
+```
+
+>Explanation
+> 
+> `form.username.label()` is just label text given in form
+> 
+> `placeholder="User Name"`  displays placeholder text given in respective field
+> 
+> `{{ form.submit(class="btn btn-lg btn-block btn-primary") }}`
+> 
+> `btn` --> button, `btn-lg` --> button large, `btn-block`-->expand button to the size of form, `btn-primary`-->gives it blue color
+> 
+
+![Flask Form](/Images/Flask/flask_7.png)
+
+***
+***
+
+<div id="id9"></div>
+
+### 9) Flask Validations
