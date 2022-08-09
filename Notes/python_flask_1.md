@@ -12,6 +12,7 @@
 9) [Flask Validations](#id9)
 10) [Flash messages & Advanced Validations](#id10)
 11) [User Authentication](#id11)
+12) [Logout](#id12)
 
 ***
 
@@ -1469,3 +1470,140 @@ Now this will show validation errors
 ***
 
 #### LOGIN Authentication - Main Part
+
+> pip install flask_login
+
+> **Add login manager in `__init__.py`**
+> 
+>```python
+>from flask_login import LoginManager
+>login_manager = LoginManager(app)
+>```
+>
+> **Add this in User class in models.py**
+> 
+>```python
+>@password.setter
+>def password(self, plain_text_password):
+>    self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+>
+>def check_password_correction(self, attempted_password):
+>    return bcrypt.check_password_hash(self.password_hash, attempted_password)
+>```
+>
+>
+> **Modify models.py**
+> 
+>```python
+>from market import db, bcrypt, login_manager
+>from flask_login import UserMixin
+>
+>
+>@login_manager.user_loader
+>def load_user(user_id):
+>    return User.query.get(int(user_id))
+>
+>
+>class User(db.Model, UserMixin):
+>```
+>
+>
+> **Modify routes.py**
+> 
+>```python
+>from flask import render_template, redirect, url_for, flash
+>from flask_login import login_user
+>
+>@app.route("/login", methods=["GET", "POST"])
+>def login_page():
+>    form = LoginForm()
+>    if form.validate_on_submit():
+>        attempted_user = User.query.filter_by(username=form.username.data).first()
+>        if attempted_user and attempted_user.check_password_correction(
+>            attempted_password=form.password.data
+>        ):
+>            login_user(attempted_user)
+>            flash(f"Success! You are logged in as: {attempted_user.username}", category='success')
+>            return redirect(url_for("market_page"))
+>        else:
+>            flash("Username and password did not match! Please try again", category="danger")
+>
+>    return render_template("login.html", form=form)
+>```
+
+***
+
+#### Display logged in username, Logout and Budget in navbar
+
+> **Modify base.html**
+>
+>```html
+> <!-- Navbar here -->
+> <nav class="navbar navbar-expand-md navbar-dark bg-dark">
+>   <a class="navbar-brand" href="#">Flask Market</a>
+>   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav">
+>     <span class="navbar-toggler-icon"></span>
+>   </button>
+>   <div class="collapse navbar-collapse" id="navbarNav">
+>     <ul class="navbar-nav mr-auto">
+>       <li class="nav-item active">
+>           <a class="nav-link" href="{{ url_for('home_page') }}">Home <span class="sr-only">(current)</span></a>
+>       </li>
+>       <li class="nav-item">
+>           <a class="nav-link" href="{{ url_for('market_page') }}">Market</a>
+>       </li>
+>     </ul>
+>       {% if current_user.is_authenticated%}
+>          <ul class="navbar-nav">
+>              <li class="nav-item">
+>                 <a class="nav-link" style="color: lawngreen; font-weight: bold">
+>                     <i class="fas fa-coins"></i>
+>                     {{ current_user.prettier_budget }}
+>                 </a>
+>             </li>
+>             <li class="nav-item">
+>                 <a class="nav-link">Welcome, {{ current_user.username }}</a>
+>             </li>
+>             <li class="nav-item">
+>                 <a class="nav-link" href="#">Logout</a>
+>             </li>
+>          </ul>
+>
+>       {% else %}
+>          <ul class="navbar-nav">
+>             <li class="nav-item">
+>                 <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
+>             </li>
+>             <li class="nav-item">
+>                 <a class="nav-link" href="{{ url_for('register_page') }}">Register</a>
+>             </li>
+>          </ul>
+>       {% endif %}
+>
+>   </div>
+> </nav>
+>```
+>
+> 
+>  **To modify budget with commas, modify models.py**
+>```python
+>@property
+>def prettier_budget(self):
+>    if len(str(self.budget)) >=4:
+>        return f'{str(self.budget)[:-3]},{str(self.budget)[-3:]}$'
+>    else:
+>        return f"{self.budget}$"
+>
+>
+>@property
+>def password(self):
+>    return self.password
+>```
+> 
+
+***
+***
+
+<div id="id12"></div>
+
+### 12) Logout
