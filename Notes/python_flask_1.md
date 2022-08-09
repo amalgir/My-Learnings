@@ -10,6 +10,8 @@
 7) [Model Relationships](#id7)
 8) [Flask Forms](#id8)
 9) [Flask Validations](#id9)
+10) [Flash messages & Advanced Validations](#id10)
+11) [User Authentication](#id11)
 
 ***
 
@@ -1090,3 +1092,244 @@ Register Page
 <div id="id9"></div>
 
 ### 9) Flask Validations
+
+This section talks about getting user data from user after clicking submit button and store in db
+
+#### Editing routes.py 
+
+```python
+from market import app, db
+from flask import render_template, redirect, url_for
+from market.models import Item, User
+from market.forms import RegisterForm
+
+@app.route("/register", methods=["GET", "POST"])
+def register_page():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user_to_create = User(username=form.username.data,
+                              email_address=form.email_address.data,
+                              password_hash=form.password1.data)
+        db.session.add(user_to_create)
+        db.session.commit()
+        return redirect(url_for("market_page"))
+    return render_template("register.html", form=form)
+```
+
+>`form.validate_on_submit()` --> returns True when submit button is clicked in form
+> 
+> `form.username.data` --> gets username entered by user in webpage to backend
+> 
+> `methods=["GET", "POST"]`  --> since we are using these methods here (POST)
+
+***
+
+#### Cross Site Request Forgery(CSRF)
+
+This is an attack towards database to do some unwanted actions. To protect from this attack, use this-
+
+> Edit form tag in register.html page
+> 
+>```html
+><form method="POST" class="form-register" style="color:white">
+>       {{ form.hidden_tag() }}
+>```
+
+***
+
+#### Adding wtforms.validators in forms.py
+
+```python
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import Length, EqualTo, Email, DataRequired
+
+
+class RegisterForm(FlaskForm):
+    username = StringField(label="User Name:", validators=[Length(min=2, max=30), DataRequired()])
+    email_address = StringField(label="Email Address:", validators=[Email(), DataRequired()])
+    password1 = PasswordField(label="Password:", validators=[Length(min=6), DataRequired()])
+    password2 = PasswordField(label="Confirm Password:", validators=[EqualTo("password1"), DataRequired()])
+    submit = SubmitField(label="Create Account")
+```
+
+* `DataRequired()`  -> This field in mandatory
+* `Length()` -> Length of characters must be..
+* `EqualTo("anotherfield")`  -> this field must be equal to another field
+
+* `Email()`-> checks if this is valid email address. To use this, install email_validator `pip install email_validator`
+
+***
+
+#### Viewing validation errors in terminal of server
+
+* We add a `form.errors` condition to print errors
+
+```python
+@app.route("/register", methods=["GET", "POST"])
+def register_page():
+    form = RegisterForm()
+    if form.validate_on_submit():
+        user_to_create = User(username=form.username.data,
+                              email_address=form.email_address.data,
+                              password_hash=form.password1.data)
+        db.session.add(user_to_create)
+        db.session.commit()
+        return redirect(url_for("market_page"))
+    if form.errors != {}:
+        for err_msg in form.errors.values():
+            print(f"Error occurred when creating a user: {err_msg}")
+    return render_template("register.html", form=form)
+```
+
+* Now we give incorrect data in webpage like single chara username, invaid email, mismatching passwords
+
+* length erros we get it in ui itself
+
+> server terminal error messages
+> 
+> ```
+>Error occurred when creating a user: ['Invalid email address.']
+>Error occurred when creating a user: ['Field must be equal to password1.']
+>```
+
+***
+***
+
+<div id="id10"></div>
+
+### 10) Flash messages & Advanced Validations
+
+* Instead of printing errors in terminal, flash it in ui
+* This is done by adding some codes in routes.py and base.html
+
+#### Edit routes.py
+
+`from flask import render_template, redirect, url_for, flash`
+
+```python
+if form.errors != {}:
+    for err_msg in form.errors.values():
+        flash(f"Error occurred when creating a user: {err_msg}")
+```
+
+***
+
+#### Edit base.html
+
+* This is added before block content created earlier
+
+```html
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+      {% for message in messages %}
+          <p>{{ message }}</p>
+      {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{% block content %}
+{% endblock %}
+<!-- Future Content here -->
+```
+
+![Flashed messages](/Images/Flask/flask_8.png)
+
+>`('message', "Error occurred when creating a user: ['Invalid email address.']")`
+> 
+> Here first one is category and second one is the message
+
+
+> To display only message and not category, edit code in base.html as:
+> 
+>```html
+>{% for category, message in messages %}
+>            <p>{{ message }}</p>
+>        {% endfor %}
+>```
+
+***
+
+#### To display message like an alert with close button X
+
+> Edit in routes.py
+> 
+>```python
+>flash(f"Error occurred when creating a user: {err_msg}", category="danger")
+>```
+> 
+> Edit in base.html
+> 
+>```html
+>{% with messages = get_flashed_messages(with_categories=true) %}
+>  {% if messages %}
+>      {% for category, message in messages %}
+>          <div class="alert alert-{{ category }}">
+>              <button type="button" class="m1-2 mb-1 close" data-dismiss="alert" aria-label="Close">
+>                  <span aria-hidden="true">&times;</span>
+>              </button>
+>              {{ message }}
+>          </div>
+>      {% endfor %}
+>  {% endif %}
+>{% endwith %}
+>
+>{% block content %}
+>{% endblock %}
+><!-- Future Content here -->
+>``` 
+
+![Alert message](/Images/Flask/flask_9.png)
+
+***
+
+#### Giving username which is already present in DB
+
+* Giving already existing username to create account, gives an error
+
+  ```
+  IntegrityError
+  sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: user.username
+  [SQL: INSERT INTO user (username, email_address, password_hash, budget) VALUES (?, ?, ?, ?)]
+  ```
+  
+* Edit forms.py to give a validation error when existing username or email is used again
+
+```python
+from flask_wtf import FlaskForm
+from wtforms import StringField, PasswordField, SubmitField
+from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from market.models import User
+
+
+class RegisterForm(FlaskForm):
+
+    # method name should be starting with 'validate_' + <field name exactly>
+    # Then FlaskForm(parent class) will automatically calls this method
+  
+    def validate_username(self, username_to_check):
+        user = User.query.filter_by(username=username_to_check.data).first()
+        if user:
+            raise ValidationError("Username already exists! Please try  a different username")
+
+    def validate_email_address(self, email_address_to_check):
+        user = User.query.filter_by(email_address=email_address_to_check.data).first()
+        if user:
+            raise ValidationError("Email Address already exists! Please try  a different email address")
+
+    username = StringField(label="User Name:", validators=[Length(min=2, max=30), DataRequired()])
+    email_address = StringField(label="Email Address:", validators=[Email(), DataRequired()])
+    password1 = PasswordField(label="Password:", validators=[Length(min=6), DataRequired()])
+    password2 = PasswordField(label="Confirm Password:", validators=[EqualTo("password1"), DataRequired()])
+    submit = SubmitField(label="Create Account")
+```
+
+Now this will show validation errors
+
+***
+***
+
+<div id="id11"></div>
+
+### 11) User Authentication
+
