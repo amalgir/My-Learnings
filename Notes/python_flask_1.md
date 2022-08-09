@@ -1333,3 +1333,139 @@ Now this will show validation errors
 
 ### 11) User Authentication
 
+#### Encrypting password
+
+> `pip install flask-bcrypt`
+
+> **Add these in init.py** 
+> 
+>```python
+>from flask_bcrypt import Bcrypt
+>bcrypt = Bcrypt(app)
+>```
+>
+> ***
+>
+>**Modify User in models.py to set password property**
+> 
+>```python
+>from market import db, bcrypt
+>
+>class User(db.Model):
+>    id = db.Column(db.Integer(), primary_key=True)
+>    username = db.Column(db.String(length=30), nullable=False, unique=True)
+>    email_address = db.Column(db.String(length=50), nullable=False, unique=True)
+>    password_hash = db.Column(db.String(length=60), nullable=False)
+>    budget = db.Column(db.Integer(), nullable=False, default=1000)
+>    items = db.relationship("Item", backref="owned_user", lazy=True)
+>
+>    @property
+>    def password(self):
+>        return self.password
+>
+>    @password.setter
+>    def password(self, plain_text_password):
+>        self.password_hash = bcrypt.generate_password_hash(plain_text_password).decode('utf-8')
+>
+>```
+>
+>***
+> 
+> **Edit password_hash to password in routes.py register_page method**
+> 
+>```python
+>user_to_create = User(username=form.username.data,
+>                      email_address=form.email_address.data,
+>                      password=form.password1.data)
+>```
+>
+>Now password will be encrypted and stored in db
+> 
+
+***
+
+#### User Login
+
+> **Create method in routes.py**
+> 
+>```python
+>@app.route("/login", methods=["GET", "POST"])
+>def login_page():
+>    form = LoginForm()
+>    return render_template("login.html", form=form)
+>```
+>
+>
+> **Set Login page in nav bar in base.html**
+> 
+>```html
+> <li class="nav-item">
+>   <a class="nav-link" href="{{ url_for('login_page') }}">Login</a>
+> </li>
+>```
+> 
+>
+> **Create Login Form in forms.py**
+> 
+>```python
+>class LoginForm(FlaskForm):
+>    username = StringField(label="User Name:", validators=[DataRequired()])
+>    password = PasswordField(label="Password:", validators=[DataRequired()])
+>    submit = SubmitField(label="Sign in")
+>```
+> 
+
+#### login.html
+
+```html
+{% extends 'base.html' %}
+{% block title %}
+    Login Page
+{% endblock %}
+
+{% block content %}
+<body class="text-center">
+    <div class="container">
+        <form method="POST" class="form-signin" style="color:white">
+            {{ form.hidden_tag() }}
+            <h1 class="h3 mb-3 font-weight-normal">
+                Please Login
+            </h1>
+            <br>
+            {{ form.username.label() }}
+            {{ form.username(class="form-control", placeholder="User Name") }}
+
+            {{ form.password.label() }}
+            {{ form.password(class="form-control", placeholder="Password") }}
+
+            <br>
+
+
+            <div class="checkbox mb-3">
+               <h6>Do not have an account?</h6>
+               <a class="btn btn-sm btn-secondary" href="{{ url_for('register_page') }}">Register</a>
+            </div>
+
+            {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+
+        </form>
+    </div>
+</body>
+{% endblock %}
+```
+
+> **NOTE**
+> 
+> We can give a provision in register page for already registered user to login by adding this snippet in register.html like in login.html
+> 
+>```html
+><div class="checkbox mb-3">
+>   <h6>Already have an account?</h6>
+>   <a class="btn btn-sm btn-secondary" href="{{ url_for('login_page') }}">Log in</a>
+></div>
+>```
+>
+
+***
+
+#### LOGIN Authentication - Main Part
