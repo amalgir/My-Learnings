@@ -14,7 +14,7 @@ A repo to organize and share my learnings
 ***
 
 * ***JAVA - SPRINGBOOT***
-  * [SpringBoot - Introduction](Notes/java_springboot_1.md)
+  * [SpringBoot - Introduction](Notes/SpringBoot_Notes/java_springboot_intro.md)
   * [SpringBoot - Part 1]()
   
 ***
