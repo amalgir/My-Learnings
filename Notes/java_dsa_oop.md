@@ -1,6 +1,6 @@
 # Java DSA - OOP
 
-These are notes made for revision, after watching the Java DSA playlist of Kunal Kushwaha on youtube.
+These are notes made for revision only.
 
 ***
 
