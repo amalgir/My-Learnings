@@ -29,6 +29,11 @@ A repo to organize and share my learnings
 
 ***
 
+* ***GIT***
+  * [Git Basics](Notes/Git_Notes/Linux_Git_Notes.md) 
+
+***
+
 * ***PYTHON***
     * [Part 1](Notes/Python_Notes/python_note.md)
     * [Part 2](Notes/Python_Notes/python_note_part_2.md)
