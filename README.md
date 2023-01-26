@@ -15,12 +15,17 @@ A repo to organize and share my learnings
 
 * ***JAVA - SPRINGBOOT***
   * [SpringBoot - Introduction](Notes/SpringBoot_Notes/java_springboot_intro.md)
-  * [SpringBoot - Part 1]()
+  * [SpringBoot - Part 1](Notes/SpringBoot_Notes/springboot_part_1.md)
   
 ***
 
 * ***DATABASE***
   * [SQL](Notes/Database_Notes/sql_note.md)
+
+***
+
+* ***SOFTWARE DESIGN AND CODING PRACTICES***
+  * [REST API Design](Notes/Backend_Design_Notes/REST_api_design.md) 
 
 ***
 
